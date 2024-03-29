@@ -22,7 +22,7 @@ public class Hospital {
     private Long hospitalid;
 
 //    @Column(nullable = false, unique = true)
-//    private String id;
+//    prㅌㅌㅌㅌivate String id;
 
 //    @JsonIgnore
 //    @Column(nullable = false)

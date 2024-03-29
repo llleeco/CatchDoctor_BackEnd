@@ -1,14 +1,17 @@
 package hannyanggang.catchdoctor.controller.reservationsController;
 
 import hannyanggang.catchdoctor.dto.reservationsDTO.ReservationsDTO;
+import hannyanggang.catchdoctor.entity.User;
 import hannyanggang.catchdoctor.exception.CustomValidationException;
 import hannyanggang.catchdoctor.service.ReservationsService.ReservationsService;
+import hannyanggang.catchdoctor.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +27,7 @@ import java.util.Map;
 @RequestMapping("/reservations")
 public class ReservationsController {
     private final ReservationsService reservationsService;
-
+    private final UserService userService;
     @PostMapping
     public ResponseEntity<?> createReservation(@RequestBody ReservationsDTO reservationsDTO) {
         try {
@@ -33,7 +36,11 @@ public class ReservationsController {
 
             if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated()) {
                 // 인증된 사용자의 정보를 활용
-                String userId = authentication.getName();
+
+
+                String Id = authentication.getName();
+                User user = userService.findUser(Long.parseLong(Id));
+                String userId = user.getId();
                 validateRequest(reservationsDTO);
                 return reservationsService.createReservation(reservationsDTO, userId);
 
