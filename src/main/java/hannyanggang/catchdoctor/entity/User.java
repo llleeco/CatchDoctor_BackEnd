@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 import hannyanggang.catchdoctor.role.UserRole;
-
 import java.time.LocalDate;
 import java.util.Set;
 
