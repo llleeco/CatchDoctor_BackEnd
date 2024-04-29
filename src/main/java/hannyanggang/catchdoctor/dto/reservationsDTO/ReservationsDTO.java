@@ -16,9 +16,7 @@ public class ReservationsDTO {
     private LocalDate reservationDate; // 예약 날짜
     private LocalTime reservationTime; //시간
     private String status; //상태
-
     private Long hospitalid; //병원 아이디(고유번호-Long)
     private String hospitalName; //병원 이름
-
     private String userName; //환자 이름
 }

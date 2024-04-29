@@ -21,12 +21,12 @@ public class Hospital {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long hospitalid;
 
-//    @Column(nullable = false, unique = true)
-//    prㅌㅌㅌㅌivate String id;
+    @Column(nullable = false, unique = true)
+    private String id;
 
-//    @JsonIgnore
-//    @Column(nullable = false)
-//    private String password;
+    @JsonIgnore
+    @Column(nullable = false)
+    private String password;
 
     @Column(nullable = false)
     private String name;
@@ -35,7 +35,7 @@ public class Hospital {
     private String department;//진료과목
 
     @OneToMany(mappedBy = "hospital")
-    private Set<OperatingHours> operatingHours; //운영시간Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'hospitalRepository' defined in hannyanggang.catchdoctor.repository.hospitalRepository.HospitalRepository defined in @EnableJpaRepositories declared on JpaRepositoriesRegistrar.EnableJpaRepositoriesConfiguration: Could not create query for public abstract org.springframework.data.domain.Page hannyanggang.catchdoctor.repository.hospitalRepository.HospitalRepository.searchWithDynamicQuery(java.lang.String,org.springframework.data.domain.Pageable); Reason: Failed to create query for method public abstract org.springframework.data.domain.Page hannyanggang.catchdoctor.repository.hospitalRepository.HospitalRepository.searchWithDynamicQuery(java.lang.String,org.springframework.data.domain.Pageable); No property 'searchWithDynamicQuery' found for type 'Hospital'
+    private Set<OperatingHours> operatingHours; //운영시간
 
 
     @OneToMany(mappedBy = "hospital")

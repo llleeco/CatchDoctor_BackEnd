@@ -3,7 +3,6 @@ package hannyanggang.catchdoctor.controller.hospitalController;
 import hannyanggang.catchdoctor.exception.CustomValidationException;
 import hannyanggang.catchdoctor.service.hospitalService.AvailableTimeService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +25,7 @@ public class AvailableTimeController {
 
     @GetMapping("/available-times")
     public Map<String, Object> getAvailableTimes(@RequestParam Long hospitalId, @RequestParam String date) {
-      //  validateHospitalId(hospitalId);
+        //  validateHospitalId(hospitalId);
         validateDate(date);
         return availableTimeService.getAvailableTimes(hospitalId, date);
     }
