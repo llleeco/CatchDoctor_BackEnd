@@ -15,6 +15,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Builder
+@Table(name="Hospital")
 public class Hospital {
     
     @Id
@@ -31,12 +32,9 @@ public class Hospital {
     @Column(nullable = false)
     private String name;
 
-    @Column
-    private String department;//진료과목
-
-    @OneToMany(mappedBy = "hospital")
-    private Set<OperatingHours> operatingHours; //운영시간
-
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="hospital_detail_id")
+    private HospitalDetail hospitalDetail;
 
     @OneToMany(mappedBy = "hospital")
     private Set<Reservations> reservations; //예약

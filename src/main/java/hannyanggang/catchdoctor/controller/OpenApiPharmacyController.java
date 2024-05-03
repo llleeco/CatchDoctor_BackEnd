@@ -1,6 +1,5 @@
 package hannyanggang.catchdoctor.controller;
 
-import hannyanggang.catchdoctor.entity.OpenApiHospital;
 import hannyanggang.catchdoctor.entity.OpenApiPharmacy;
 import hannyanggang.catchdoctor.repository.OpenApiPharmacyRepository;
 import lombok.RequiredArgsConstructor;

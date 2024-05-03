@@ -6,6 +6,7 @@ import hannyanggang.catchdoctor.exception.CustomValidationException;
 import hannyanggang.catchdoctor.service.ReservationsService.ReservationsService;
 import hannyanggang.catchdoctor.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -62,10 +63,6 @@ public class ReservationsController {
     }
 
     private void validateRequest(ReservationsDTO reservationsDTO) {
-//        if (!reservationsDTO.getHospitalid().matches("\\d{3}-\\d{2}-\\d{5}")) {
-//            throw new CustomValidationException(HttpStatus.BAD_REQUEST.value(), "잘못된 형식(3-2-5)");
-//        }
-
         if (reservationsDTO.getReservationTime().getMinute() != 0) {
             throw new CustomValidationException(HttpStatus.BAD_REQUEST.value(), "잘못된 형식(time)");
         }

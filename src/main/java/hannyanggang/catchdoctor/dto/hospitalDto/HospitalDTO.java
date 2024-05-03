@@ -12,12 +12,4 @@ public class HospitalDTO {
     private Long hospitalid;
     private String name;
     private String operatingHours;
-    private String department;
-
-//    public HospitalDTO(Long hospitalid, String name, String department, String operatingHours) {
-//        this.hospitalid=hospitalid;
-//        this.name = name;
-//        this.department = department;
-//        this.operatingHours = operatingHours;
-//    }
 }
