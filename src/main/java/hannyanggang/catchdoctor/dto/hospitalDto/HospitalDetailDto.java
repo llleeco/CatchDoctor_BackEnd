@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HospitalDetailDto {
-    private Long hospitalid;
     private String hospitalName;
     private String hospitalInfo;
     private String department;
@@ -30,11 +29,5 @@ public class HospitalDetailDto {
     private String sun_close;
     private String hol_open; // 공휴일
     private String hol_close;
-
-    public HospitalDetailDto(Hospital hospital) {
-        this.hospitalid = hospital.getHospitalid();
-        this.hospitalName = hospital.getName();
-
-    }
 
 }

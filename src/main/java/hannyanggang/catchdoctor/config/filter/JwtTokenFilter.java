@@ -1,7 +1,9 @@
 package hannyanggang.catchdoctor.config.filter;
 
+import hannyanggang.catchdoctor.entity.Hospital;
 import hannyanggang.catchdoctor.entity.User;
 import hannyanggang.catchdoctor.service.UserService;
+import hannyanggang.catchdoctor.service.hospitalService.HospitalService;
 import hannyanggang.catchdoctor.util.JwtTokenUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -21,6 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
     private final UserService userService;
+    private final HospitalService hospitalService;
     private final String secretKey;
 
     @Override
@@ -54,13 +58,24 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         // 추출한 loginId로 User 찾아오기
         User loginUser = userService.getLoginUserByLoginId(userid);
 
-        // loginUser 정보로 UsernamePasswordAuthenticationToken 발급
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                loginUser.getUserid(), null, List.of(new SimpleGrantedAuthority(loginUser.getRole().name())));
-        authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+        if(loginUser == null) {
+            Hospital loginHospital = hospitalService.getLoginUserByLoginId(userid);
 
-        // 권한 부여
-        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-        filterChain.doFilter(request, response);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    loginHospital.getId(), null, List.of(new SimpleGrantedAuthority(loginHospital.getRole().name())));
+            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            filterChain.doFilter(request, response);
+        } else {
+            // loginUser 정보로 UsernamePasswordAuthenticationToken 발급
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                    loginUser.getUserid(), null, List.of(new SimpleGrantedAuthority(loginUser.getRole().name())));
+            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+            // 권한 부여
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            filterChain.doFilter(request, response);
+        }
     }
 }

@@ -19,7 +19,7 @@ public class OpenApiController {
 
     private final OpenApiRepository openApiRepository;
 
-    @RequestMapping("/api")
+    @GetMapping("/api")
     public String save() throws IOException {
 
 
