@@ -1,7 +1,12 @@
 package hannyanggang.catchdoctor.controller.ChatController;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import hannyanggang.catchdoctor.dto.chatDto.ChatGPTRequestDto;
 import hannyanggang.catchdoctor.dto.chatDto.ChatGPTResponseDto;
+import hannyanggang.catchdoctor.dto.chatDto.ChatResponseStorage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +16,9 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.beans.factory.annotation.Value;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/bot")
@@ -24,6 +32,8 @@ public class ChatController {
     @Autowired
     private RestTemplate template;
 
+    @Autowired
+    private ChatResponseStorage responseStorage;
 
     @GetMapping("/chat")
     public String chat(@RequestParam(name = "prompt") String prompt) {
@@ -38,6 +48,20 @@ public class ChatController {
 
         // OpenAPI에게 요청을 보내고 응답을 받음
         ChatGPTResponseDto chatGPTResponse = template.postForObject(apiURL, entity, ChatGPTResponseDto.class);
+
+        JsonParser parser = new JsonParser();
+        JsonObject jsonObject = parser.parse(chatGPTResponse.getChoices().get(0).getMessage().getContent()).getAsJsonObject();
+        JsonArray jsonArray = jsonObject.getAsJsonArray("recommended_departments");
+
+// recommendedDepartments를 저장하기 위한 리스트
+        List<String> recommendedDepartments = new ArrayList<>();
+
+// JSON 배열의 각 요소를 문자열로 변환하여 리스트에 추가
+        for (JsonElement element : jsonArray) {
+            recommendedDepartments.add(element.getAsString());
+        }
+
+        responseStorage.setRecommendedDepartments(recommendedDepartments);
 
         // OpenAPI의 응답에서 첫 번째 선택지의 메시지를 가져와서 반환
         return chatGPTResponse.getChoices().get(0).getMessage().getContent();

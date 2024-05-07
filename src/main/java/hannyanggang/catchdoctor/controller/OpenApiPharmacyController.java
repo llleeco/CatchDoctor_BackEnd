@@ -22,14 +22,11 @@ public class OpenApiPharmacyController {
 
     @GetMapping("/apipharmacy")
     public String save() throws IOException {
-
-
-
         String result = "";
 
         try {
             //
-            String urlStr = "https://apis.data.go.kr/B552657/ErmctInsttInfoInqireService/getParmacyBassInfoInqire?serviceKey=%2B11swrr4a7rdAi7MbD6nyiiDgg4ySAlG6YHekwCyrVZUMFN7OcWIzD9c33gQJy%2Birg0bthGv5PkRjuEwDwJHCw%3D%3D&_type=json&numOfRows=100";
+            String urlStr = "https://apis.data.go.kr/B552657/ErmctInsttInfoInqireService/getParmacyBassInfoInqire?serviceKey=%2B11swrr4a7rdAi7MbD6nyiiDgg4ySAlG6YHekwCyrVZUMFN7OcWIzD9c33gQJy%2Birg0bthGv5PkRjuEwDwJHCw%3D%3D&_type=json&numOfRows=1000";
             URL url = new URL(urlStr);
             BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
 
