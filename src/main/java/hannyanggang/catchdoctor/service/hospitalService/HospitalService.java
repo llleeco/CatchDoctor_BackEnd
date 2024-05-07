@@ -2,20 +2,19 @@ package hannyanggang.catchdoctor.service.hospitalService;
 
 import hannyanggang.catchdoctor.dto.LoginRequestDto;
 import hannyanggang.catchdoctor.dto.hospitalDto.*;
-import hannyanggang.catchdoctor.entity.BookMark;
-import hannyanggang.catchdoctor.entity.Hospital;
-import hannyanggang.catchdoctor.entity.User;
+import hannyanggang.catchdoctor.entity.*;
 import hannyanggang.catchdoctor.repository.BookMarkRepository;
+import hannyanggang.catchdoctor.repository.OpenApiRepository;
+import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalDetailRepository;
 import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalRepository;
-import hannyanggang.catchdoctor.repository.operationTimeRepository.OperationTimeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.print.Book;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -29,8 +28,9 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class HospitalService {
     private final HospitalRepository hospitalRepository;
+    private final HospitalDetailRepository hospitalDetailRepository;
+    private final OpenApiRepository openApiRepository;
     private final BookMarkRepository bookMarkRepository;
-    private final OperationTimeRepository operationTimeRepository;
 
     @Transactional
     public String updateBookmarkHospital(Long id, User user) {
@@ -113,44 +113,44 @@ public class HospitalService {
 
     }
 
-    public List<HospitalDTO> searchByDepartment(String department, int page, int size) {
-        // 오늘 날짜에 해당하는 요일을 한글로 구합니다.
-        String today = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(new Date());
-        PageRequest pageRequest = PageRequest.of(page,size);
-        Page<Hospital> hospitals = hospitalRepository.findByDepartment(department, pageRequest);
-
-        // 병원 목록을 HospitalDTO 목록으로 변환
-        return hospitals.stream().map(hospital -> {
-            // HospitalDTO 객체 생성
-            return new HospitalDTO(
-                    hospital.getHospitalid(),
-                    hospital.getName(),
-                    hospital.getDepartment()
-            );
-        }).collect(toList());
-    }
-
-    public List<HospitalDTO> getAllHospitals(int page, int size) {
-
-        String today = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(new Date());
-        PageRequest pageRequest = PageRequest.of(page,size);
-        Page<Hospital> hospitals = hospitalRepository.findAll(pageRequest);
-
-        // 병원 목록을 HospitalDTO 목록으로 변환
-        return hospitals.stream().map(hospital -> {
-            // 운영시간 및 좋아요 수 조회
-            String operatingHours = operationTimeRepository.findOperatingHoursByHospitalIdAndDay(hospital.getHospitalid(), today);
-
-            // HospitalDTO 객체 생성
-            return new HospitalDTO(
-                    hospital.getHospitalid(),
-                    hospital.getName(),
-                    hospital.getDepartment(),
-                    operatingHours
-            );
-        }).collect(toList());
-
-    }
+//    public List<HospitalDTO> searchByDepartment(String department, int page, int size) {
+//        // 오늘 날짜에 해당하는 요일을 한글로 구합니다.
+//        String today = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(new Date());
+//        PageRequest pageRequest = PageRequest.of(page,size);
+//        Page<Hospital> hospitals = hospitalRepository.findByDepartment(department, pageRequest);
+//
+//        // 병원 목록을 HospitalDTO 목록으로 변환
+//        return hospitals.stream().map(hospital -> {
+//            // HospitalDTO 객체 생성
+//            return new HospitalDTO(
+//                    hospital.getHospitalid(),
+//                    hospital.getName(),
+//                    hospit
+//            );
+//        }).collect(toList());
+//    }
+//
+//    public List<HospitalDTO> getAllHospitals(int page, int size) {
+//
+//        String today = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(new Date());
+//        PageRequest pageRequest = PageRequest.of(page,size);
+//        Page<Hospital> hospitals = hospitalRepository.findAll(pageRequest);
+//
+//        // 병원 목록을 HospitalDTO 목록으로 변환
+//        return hospitals.stream().map(hospital -> {
+//            // 운영시간 및 좋아요 수 조회
+//            String operatingHours = operationTimeRepository.findOperatingHoursByHospitalIdAndDay(hospital.getHospitalid(), today);
+//
+//            // HospitalDTO 객체 생성
+//            return new HospitalDTO(
+//                    hospital.getHospitalid(),
+//                    hospital.getName(),
+//                    hospital.getDepartment(),
+//                    operatingHours
+//            );
+//        }).collect(toList());
+//
+//    }
 
     @Transactional(readOnly = true)
     public HospitalFindAllWithPagingResponseDto findBookmarkHospitals(Integer page,  User user) {
@@ -162,4 +162,22 @@ public class HospitalService {
         return HospitalFindAllWithPagingResponseDto.toDto(hospitalWithDto, new PageInfoDto(bookMarks));
 
     }
+
+    public HospitalDetail getHospitalDetailByHospitalId(String hospitalId) {
+        Hospital hospital = hospitalRepository.findById(hospitalId);
+        HospitalDetail hospitalDetail = hospitalDetailRepository.findByHospital(hospital);
+
+        return hospitalDetail;
+    }
+
+    public Hospital connectOpenApi(HospitalSetDto hospitalSetDto,String hospitalId) {
+        String addnum = hospitalSetDto.getAddnum();
+        String hospitalname = hospitalSetDto.getHospitalname();
+        OpenApiHospital openapi = openApiRepository.findByAddressAndHospitalName(addnum,hospitalname);
+        Hospital hospital = hospitalRepository.findById(hospitalId);
+        hospital.setOpenApiHospital(openapi);
+        return hospitalRepository.save(hospital);
+    }
+
+
 }

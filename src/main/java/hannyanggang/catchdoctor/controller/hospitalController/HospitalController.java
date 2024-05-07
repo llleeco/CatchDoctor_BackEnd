@@ -2,10 +2,14 @@ package hannyanggang.catchdoctor.controller.hospitalController;
 
 import hannyanggang.catchdoctor.dto.hospitalDto.SearchResponseDto;
 import hannyanggang.catchdoctor.entity.User;
+import hannyanggang.catchdoctor.dto.hospitalDto.HospitalDetailDto;
+import hannyanggang.catchdoctor.dto.hospitalDto.HospitalSetDto;
 import hannyanggang.catchdoctor.exception.CustomValidationException;
 import hannyanggang.catchdoctor.repository.UserRepository;
 import hannyanggang.catchdoctor.response.Response;
 import hannyanggang.catchdoctor.response.Response2;
+import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalRepository;
+import hannyanggang.catchdoctor.service.hospitalService.HospitalDetailService;
 import hannyanggang.catchdoctor.service.hospitalService.HospitalService;
 import hannyanggang.catchdoctor.dto.hospitalDto.HospitalDTO;
 import hannyanggang.catchdoctor.service.hospitalService.OpenApiService;
@@ -13,33 +17,41 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Pattern;
 
 
 @Controller
 @RestController
 @RequestMapping("/hospitals")
 public class HospitalController {
-
+    private final HospitalRepository hospitalRepository;
     private final HospitalService hospitalService;
-
+    private final HospitalDetailService hospitalDetailService;
     private final OpenApiService openApiService;
     private final UserRepository userRepository;
 
     //진료과목 리스트
     private static final List<String> VALID_DEPARTMENTS = Arrays.asList("소아청소년과", "내과", "이비인후과", "정형외과", "안과", "산부인과", "신경외과", "피부과", "정신건강의학과");
 
-    public HospitalController(HospitalService hospitalService, OpenApiService openApiService, UserRepository userRepository) {
+    public HospitalController(HospitalService hospitalService, OpenApiService openApiService, UserRepository userRepository, HospitalRepository hospitalRepository, HospitalDetailService hospitalDetailService, OpenApiService openApiService1, UserRepository userRepository1) {
         this.hospitalService = hospitalService;
-        this.openApiService = openApiService;
-        this.userRepository = userRepository;
+        this.hospitalRepository = hospitalRepository;
+        this.hospitalDetailService = hospitalDetailService;
+        this.openApiService = openApiService1;
+        this.userRepository = userRepository1;
     }
 
     @GetMapping
@@ -98,6 +110,49 @@ public class HospitalController {
     private boolean isValidDepartment(String department) {
         return VALID_DEPARTMENTS.contains(department);
         // 진료과목이 유효한 경우 true 반환, 그렇지 않으면 false 반환
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/hospitaldetail")
+    public ResponseEntity<?> hospitaldetail(@RequestBody HospitalDetailDto hospitalDetailDto) {
+        try {
+
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+            if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated()) {
+                // 인증된 사용자의 정보를 활용
+
+
+                String Id = authentication.getName();
+                return hospitalDetailService.hospitalMyPage(hospitalDetailDto, Id);
+
+            } else {
+                throw new CustomValidationException(HttpStatus.UNAUTHORIZED.value(), "유효하지 않은 토큰");
+            }
+
+
+        } catch (CustomValidationException e) {
+            Map<String, Object> errorDetails = new HashMap<>();
+            errorDetails.put("status", e.getStatus());
+            errorDetails.put("message", e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.valueOf(e.getStatus()))
+                    .body(errorDetails);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/findhospitaldetails")
+    public Response findHospitalDetail(Authentication authentication) {
+        String hospitalId = authentication.getName();
+        return new Response("조회", "병원 상세정보 조회", hospitalService.getHospitalDetailByHospitalId(hospitalId));
+    }
+
+    @PostMapping("/setopenapi")
+    public Response setOpenApi(Authentication authentication, @RequestBody HospitalSetDto hospitalSetDto){
+        String hospitalId = authentication.getName();
+        return new Response("완료", "병원 등록 완료", hospitalService.connectOpenApi(hospitalSetDto,hospitalId));
     }
 
     //병원 즐겨찾기

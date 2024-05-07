@@ -12,17 +12,10 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface HospitalRepository extends JpaRepository<Hospital, Long>, HospitalRepositoryCustom {
+public interface HospitalRepository extends JpaRepository<Hospital, Long> {
 
     Hospital findById(String id);
+
     Optional<Hospital> findByHospitalid(Long hospitalid);
 
-    Page<Hospital> searchWithDynamicQuery(String query, Pageable pageable);
-    Page<Hospital> findByDepartment(String department, Pageable pageable);
-
-
-    //Optional<Hospital> findByBusinessId(String businessId);
-
-    @Query("SELECT h.name FROM Hospital h WHERE h.hospitalid = :hospitalid")
-    String findNameByHospitalid(@Param("hospitalid") Long hospitalid);
 }

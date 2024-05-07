@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import hannyanggang.catchdoctor.role.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
+import org.aspectj.apache.bcel.classfile.Module;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
@@ -15,6 +16,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Builder
+@Table(name="Hospital")
 public class Hospital {
     
     @Id
@@ -31,14 +33,17 @@ public class Hospital {
     @Column(nullable = false)
     private String name;
 
-    @Column
-    private String department;//진료과목
+    private UserRole role; // USER
 
-    @OneToMany(mappedBy = "hospital")
-    private Set<OperatingHours> operatingHours; //운영시간
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name="hospital_detail_id")
+    private HospitalDetail hospitalDetail;
 
+    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JoinColumn(name="hospital_oepnapi_id")
+    private OpenApiHospital openApiHospital;
 
     @OneToMany(mappedBy = "hospital")
     private Set<Reservations> reservations; //예약
-//    private UserRole role; // ADMIN
+
 }

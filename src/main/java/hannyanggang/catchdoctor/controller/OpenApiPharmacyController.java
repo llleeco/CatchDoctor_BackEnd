@@ -1,12 +1,12 @@
 package hannyanggang.catchdoctor.controller;
 
-import hannyanggang.catchdoctor.entity.OpenApiHospital;
 import hannyanggang.catchdoctor.entity.OpenApiPharmacy;
 import hannyanggang.catchdoctor.repository.OpenApiPharmacyRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +20,7 @@ import java.net.URL;
 public class OpenApiPharmacyController {
     private final OpenApiPharmacyRepository openApiPharmacyRepository;
 
-    @RequestMapping("/apipharmacy")
+    @GetMapping("/apipharmacy")
     public String save() throws IOException {
         String result = "";
 
