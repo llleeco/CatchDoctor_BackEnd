@@ -1,7 +1,7 @@
 package hannyanggang.catchdoctor.controller;
 
 import hannyanggang.catchdoctor.entity.OpenApiHospital;
-import hannyanggang.catchdoctor.repository.OpenApiRepository;
+import hannyanggang.catchdoctor.repository.hospitalRepository.OpenApiRepository;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;

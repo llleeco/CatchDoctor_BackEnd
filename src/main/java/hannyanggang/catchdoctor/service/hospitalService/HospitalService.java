@@ -1,32 +1,72 @@
 package hannyanggang.catchdoctor.service.hospitalService;
 
 import hannyanggang.catchdoctor.dto.LoginRequestDto;
-import hannyanggang.catchdoctor.dto.hospitalDto.HospitalDTO;
-import hannyanggang.catchdoctor.dto.hospitalDto.HospitalRegisterDto;
-import hannyanggang.catchdoctor.dto.userDto.UserRegisterDto;
+import hannyanggang.catchdoctor.dto.hospitalDto.*;
+import hannyanggang.catchdoctor.entity.BookMark;
 import hannyanggang.catchdoctor.entity.Hospital;
 import hannyanggang.catchdoctor.entity.User;
+import hannyanggang.catchdoctor.repository.BookMarkRepository;
 import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalRepository;
 import hannyanggang.catchdoctor.repository.operationTimeRepository.OperationTimeRepository;
-import hannyanggang.catchdoctor.role.UserRole;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.print.Book;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
+
 @RequiredArgsConstructor
 @Service
 public class HospitalService {
     private final HospitalRepository hospitalRepository;
-
+    private final BookMarkRepository bookMarkRepository;
     private final OperationTimeRepository operationTimeRepository;
+
+    @Transactional
+    public String updateBookmarkHospital(Long id, User user) {
+        Optional<Hospital> optionalHospital = hospitalRepository.findByHospitalid(id);
+        if(optionalHospital.isPresent()) {
+            Hospital hospital = optionalHospital.get();
+            if(!hasBookmarkHospital(hospital, user)){
+                return createBookmarkHospital(hospital, user);
+            }
+            return removeBookmarkHospital(hospital, user);
+        }
+        // 처리할 Hospital이 존재하지 않을 경우에 대한 로직
+        return "Hospital not found";
+    }
+
+
+    private boolean hasBookmarkHospital(Hospital hospital, User user) {
+        return bookMarkRepository.findByHospitalAndUser(hospital, user).isPresent();
+    }
+
+    private String createBookmarkHospital(Hospital hospital, User user){
+        BookMark bookmark = new BookMark(hospital, user);
+        bookMarkRepository.save(bookmark);
+        return "이 병원을 즐겨찾기에 추가합니다.";
+    }
+    private String removeBookmarkHospital(Hospital hospital, User user){
+        Optional<BookMark> bookmark = bookMarkRepository.findByHospitalAndUser(hospital, user);
+        if (bookmark.isPresent()) {
+            bookMarkRepository.delete(bookmark.get());
+            return "이 병원을 즐겨찾기에서 삭제합니다.";
+        } else {
+            // 즐겨찾기가 이미 존재하지 않는 경우에 대한 처리
+            return "이 병원이 즐겨찾기에 존재하지 않습니다.";
+        }
+    }
+
 
     public Hospital register(HospitalRegisterDto registerDto) {
         Hospital hospital = Hospital.builder()
@@ -73,38 +113,6 @@ public class HospitalService {
 
     }
 
-
-
-
-
-    // 밑은 뭐에쓰는지 모르겠음.
-    public List<HospitalDTO> searchHospitalsWithDetails(String query, int page, int size) {
-
-        PageRequest pageRequest = PageRequest.of(page,size);
-
-        // 오늘 날짜에 해당하는 요일을 한글로 구합니다.
-        String today = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(new Date());
-        System.out.println("query = " + query);
-        // 동적 쿼리로 병원 검색
-        Page<Hospital> hospitals = hospitalRepository.searchWithDynamicQuery(query, pageRequest);
-        System.out.println("hospitals = " + hospitals);
-        // 병원 목록을 HospitalDTO 목록으로 변환
-        return hospitals.stream().map(hospital -> {
-            // 운영시간 및 좋아요 수 조회
-            String operatingHours = operationTimeRepository.findOperatingHoursByHospitalIdAndDay(hospital.getHospitalid(), today);
-
-            // HospitalDTO 객체 생성
-            return new HospitalDTO(
-                    hospital.getHospitalid(),
-                    hospital.getName(),
-                    hospital.getDepartment(),
-                    operatingHours
-            );
-        }).collect(Collectors.toList());
-
-    }
-
-
     public List<HospitalDTO> searchByDepartment(String department, int page, int size) {
         // 오늘 날짜에 해당하는 요일을 한글로 구합니다.
         String today = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(new Date());
@@ -113,17 +121,13 @@ public class HospitalService {
 
         // 병원 목록을 HospitalDTO 목록으로 변환
         return hospitals.stream().map(hospital -> {
-            // 운영시간 및 좋아요 수 조회
-            String operatingHours = operationTimeRepository.findOperatingHoursByHospitalIdAndDay(hospital.getHospitalid(), today);
-
             // HospitalDTO 객체 생성
             return new HospitalDTO(
                     hospital.getHospitalid(),
                     hospital.getName(),
-                    hospital.getDepartment(),
-                    operatingHours
+                    hospital.getDepartment()
             );
-        }).collect(Collectors.toList());
+        }).collect(toList());
     }
 
     public List<HospitalDTO> getAllHospitals(int page, int size) {
@@ -144,7 +148,18 @@ public class HospitalService {
                     hospital.getDepartment(),
                     operatingHours
             );
-        }).collect(Collectors.toList());
+        }).collect(toList());
+
+    }
+
+    @Transactional(readOnly = true)
+    public HospitalFindAllWithPagingResponseDto findBookmarkHospitals(Integer page,  User user) {
+        PageRequest pageRequest = PageRequest.of(page, 10, Sort.by("id").descending());
+        Page<BookMark> bookMarks  = bookMarkRepository.findAllByUser(user,pageRequest);
+        List<HospitalFindAllResponseDto> hospitalWithDto = bookMarks.stream().map(BookMark::getHospital).map(HospitalFindAllResponseDto::toDto)
+                .collect(toList());
+
+        return HospitalFindAllWithPagingResponseDto.toDto(hospitalWithDto, new PageInfoDto(bookMarks));
 
     }
 }
