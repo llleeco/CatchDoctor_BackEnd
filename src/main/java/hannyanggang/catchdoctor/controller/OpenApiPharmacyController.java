@@ -2,6 +2,7 @@ package hannyanggang.catchdoctor.controller;
 
 import hannyanggang.catchdoctor.entity.OpenApiPharmacy;
 import hannyanggang.catchdoctor.repository.OpenApiPharmacyRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -20,6 +21,7 @@ import java.net.URL;
 public class OpenApiPharmacyController {
     private final OpenApiPharmacyRepository openApiPharmacyRepository;
 
+    @Operation(summary = "약국 OPENAPI 저장", description="약국 OPENAPI DB에 저장하기")
     @GetMapping("/apipharmacy")
     public String save() throws IOException {
         String result = "";

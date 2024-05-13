@@ -2,6 +2,7 @@ package hannyanggang.catchdoctor.controller;
 
 import hannyanggang.catchdoctor.entity.OpenApiHospital;
 import hannyanggang.catchdoctor.repository.hospitalRepository.OpenApiRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -19,6 +20,7 @@ public class OpenApiController {
 
     private final OpenApiRepository openApiRepository;
 
+    @Operation(summary = "병원 OPENAPI 저장", description="OPENAPI에서 병원데이터 DB에 저장하기")
     @GetMapping("/api")
     public String save() throws IOException {
 
@@ -59,7 +61,8 @@ public class OpenApiController {
                         telno,
                         postNo,
                         xPos,
-                        yPos
+                        yPos,
+                        null
                 );
                 openApiRepository.save(openApiHospital);
             }

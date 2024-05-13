@@ -13,6 +13,7 @@ import hannyanggang.catchdoctor.service.hospitalService.HospitalDetailService;
 import hannyanggang.catchdoctor.service.hospitalService.HospitalService;
 import hannyanggang.catchdoctor.dto.hospitalDto.HospitalDTO;
 import hannyanggang.catchdoctor.service.hospitalService.OpenApiService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -37,7 +38,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/hospitals")
 public class HospitalController {
-    private final HospitalRepository hospitalRepository;
     private final HospitalService hospitalService;
     private final HospitalDetailService hospitalDetailService;
     private final OpenApiService openApiService;
@@ -48,12 +48,12 @@ public class HospitalController {
 
     public HospitalController(HospitalService hospitalService, OpenApiService openApiService, UserRepository userRepository, HospitalRepository hospitalRepository, HospitalDetailService hospitalDetailService, OpenApiService openApiService1, UserRepository userRepository1) {
         this.hospitalService = hospitalService;
-        this.hospitalRepository = hospitalRepository;
         this.hospitalDetailService = hospitalDetailService;
         this.openApiService = openApiService1;
         this.userRepository = userRepository1;
     }
 
+    @Operation(summary = "병원 검색", description="병원 검색하기")
     @GetMapping
     public ResponseEntity<?> searchHospitals(
             @RequestParam(required = false) String query,
@@ -112,56 +112,39 @@ public class HospitalController {
         // 진료과목이 유효한 경우 true 반환, 그렇지 않으면 false 반환
     }
 
-    @ResponseStatus(HttpStatus.CREATED)
+    // 병원 detaill 작성
+    @Operation(summary = "병원 상세정보", description="병원 상세정보 입력")
     @PostMapping("/hospitaldetail")
-    public ResponseEntity<?> hospitaldetail(@RequestBody HospitalDetailDto hospitalDetailDto) {
-        try {
-
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-            if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated()) {
-                // 인증된 사용자의 정보를 활용
-
-
-                String Id = authentication.getName();
-                return hospitalDetailService.hospitalMyPage(hospitalDetailDto, Id);
-
-            } else {
-                throw new CustomValidationException(HttpStatus.UNAUTHORIZED.value(), "유효하지 않은 토큰");
-            }
-
-
-        } catch (CustomValidationException e) {
-            Map<String, Object> errorDetails = new HashMap<>();
-            errorDetails.put("status", e.getStatus());
-            errorDetails.put("message", e.getMessage());
-            return ResponseEntity
-                    .status(HttpStatus.valueOf(e.getStatus()))
-                    .body(errorDetails);
-        } catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
+    public Response hospitaldetail(Authentication authentication, @RequestBody HospitalDetailDto hospitalDetailDto) {
+        String Id = authentication.getName();
+        return new Response("입력완료", "병원 정보 입력완료", hospitalDetailService.hospitalMyPage(hospitalDetailDto, Id));
     }
 
+    // 병원 detail 찾기
+    @Operation(summary = "병원 상세정보 찾기", description="본인의 병원 상세정보 요청")
     @GetMapping("/findhospitaldetails")
     public Response findHospitalDetail(Authentication authentication) {
         String hospitalId = authentication.getName();
         return new Response("조회", "병원 상세정보 조회", hospitalService.getHospitalDetailByHospitalId(hospitalId));
     }
 
+    // 병원 oepnapi 연결하기
+    @Operation(summary = "병원 연결", description="DB에 저장된 병원과 연결하기")
     @PostMapping("/setopenapi")
     public Response setOpenApi(Authentication authentication, @RequestBody HospitalSetDto hospitalSetDto){
-        String hospitalId = authentication.getName();
+        String hospitalId = authentication.getName(); // getName() -> login Id
         return new Response("완료", "병원 등록 완료", hospitalService.connectOpenApi(hospitalSetDto,hospitalId));
     }
 
     //병원 즐겨찾기
+    @Operation(summary = "병원 즐겨찾기", description="병원 즐겨찾기 등록")
     @PostMapping("/{id}/bookmarks")
     @ResponseStatus(HttpStatus.OK)
     public Response2 bookmarkHospital(@PathVariable Long id){
         return Response2.success(hospitalService.updateBookmarkHospital(id, getPrincipal()));
     }
 
+    @Operation(summary = "나의 즐겨찾기 요청", description="나의 병원 즐겨찾기 요청하기")
     @GetMapping("/bookmarks")
     @ResponseStatus(HttpStatus.OK)
     public Response2 findFavoriteBoards(@RequestParam(defaultValue = "0") Integer page){

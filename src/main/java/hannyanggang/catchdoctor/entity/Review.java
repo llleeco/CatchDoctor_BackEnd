@@ -1,5 +1,6 @@
 package hannyanggang.catchdoctor.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -22,6 +23,7 @@ public class Review {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "hospitalid", nullable = false)
+    @JsonIgnore
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Hospital hospital;
 

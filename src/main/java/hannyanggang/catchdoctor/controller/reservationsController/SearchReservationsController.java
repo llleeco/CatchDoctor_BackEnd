@@ -3,6 +3,7 @@ package hannyanggang.catchdoctor.controller.reservationsController;
 import hannyanggang.catchdoctor.dto.reservationsDTO.ReservationsDTO;
 import hannyanggang.catchdoctor.exception.CustomValidationException;
 import hannyanggang.catchdoctor.service.ReservationsService.SearchReservationsService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,7 @@ public class SearchReservationsController {
 
     private final SearchReservationsService searchReservationsService;
 
+    @Operation(summary = "병원별 예약 조회", description="각 병원의 예약 내용 조회하기")
     @GetMapping("/search")
     public ResponseEntity<?> searchReservation(@RequestParam(required = false) String hospitalName,
                                                @RequestParam(required = false) String date)

@@ -19,7 +19,7 @@ public class JwtLoginApiController {
 
     private final UserService userService;
 
-    @Operation(summary = "회원가입", description="회원가입 진행")
+    @Operation(summary = "유저 회원가입", description="유저 회원가입 진행")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/user/join")
     public Response<?> userjoin(@RequestBody UserRegisterDto joinRequest) {
@@ -34,6 +34,7 @@ public class JwtLoginApiController {
        return new Response<>("true", "가입 성공", userService.register(joinRequest));
     }
 
+    @Operation(summary = "유저 로그인", description="유저 로그인 진행")
     @PostMapping("/login")
     public String login(@RequestBody LoginRequestDto loginRequest) {
 
@@ -54,6 +55,7 @@ public class JwtLoginApiController {
         return jwtToken;
     }
 
+    @Operation(summary = "나의 정보", description="로그인한 유저의 정보를 찾기")
     @GetMapping("/info")
     public String userInfo(Authentication auth) {
         User loginUser = userService.getLoginUserByLoginId(auth.getName());

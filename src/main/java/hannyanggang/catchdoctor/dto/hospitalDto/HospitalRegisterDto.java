@@ -11,4 +11,5 @@ public class HospitalRegisterDto {
     private String id;
     private String password;
     private String name;
+    private String addnum;
 }

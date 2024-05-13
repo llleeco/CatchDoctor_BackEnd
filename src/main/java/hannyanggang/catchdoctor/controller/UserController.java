@@ -31,11 +31,4 @@ public class UserController {
     public Response<?> findUser(@PathVariable("userid") Long userid) {
         return new Response<>("true", "조회 성공", userService.findUser(userid));
     }
-
-//    @Operation(summary = "회원가입", description="회원가입 진행")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    @PostMapping("/users/join")
-//    public Response<?> register(@RequestBody UserRegisterDto registerDto) {
-//        return new Response<>("true", "가입 성공", userService.register(registerDto));
-//    }
 }

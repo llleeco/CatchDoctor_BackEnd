@@ -2,6 +2,7 @@ package hannyanggang.catchdoctor.controller.reservationsController;
 
 import hannyanggang.catchdoctor.exception.CustomValidationException;
 import hannyanggang.catchdoctor.service.ReservationsService.CancelReservationsService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,7 @@ public class CancelReservationsController {
 
     private final CancelReservationsService cancelReservationsService;
 
+    @Operation(summary = "예약 취소", description="병원 예약 취소하기")
     @DeleteMapping("/{reservationId}")
     public ResponseEntity<?> CancelReservations(@PathVariable Long reservationId) {
         try {

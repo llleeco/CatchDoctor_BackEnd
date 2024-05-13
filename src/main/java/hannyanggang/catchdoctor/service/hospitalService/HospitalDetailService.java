@@ -19,7 +19,7 @@ import java.util.Map;
 public class HospitalDetailService {
     private final HospitalDetailRepository hospitalDetailRepository;
     private final HospitalRepository hospitalRepository;
-    public ResponseEntity<?> hospitalMyPage(HospitalDetailDto hospitalDetailsDto, String hospitalId) {
+    public HospitalDetail hospitalMyPage(HospitalDetailDto hospitalDetailsDto, String hospitalId) {
         Hospital hospital = hospitalRepository.findById(hospitalId);
 
         HospitalDetail hospitalDetail = HospitalDetail.builder()
@@ -44,14 +44,10 @@ public class HospitalDetailService {
                 .hol_open(hospitalDetailsDto.getHol_open())
                 .hol_close(hospitalDetailsDto.getHol_close())
                 .build();
+        hospital.setHospitalDetail(hospitalDetail);
         hospitalDetailRepository.save(hospitalDetail);
+        hospitalRepository.save(hospital);
 
-//        HospitalDetail Detail = hospitalDetailRepository.findById(hospitalId);
-//        String hospitalInfo = Detail.getHospitalInfo();
-        Map<String, Object> response = new HashMap<>();
-//        response.put("hospitalInfo", hospitalInfo);
-        response.put("hospitalId", hospitalId);
-
-        return ResponseEntity.ok(response);
+        return hospitalDetail;
     }
 }

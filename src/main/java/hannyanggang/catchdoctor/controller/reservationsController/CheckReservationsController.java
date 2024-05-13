@@ -3,6 +3,7 @@ package hannyanggang.catchdoctor.controller.reservationsController;
 import hannyanggang.catchdoctor.dto.reservationsDTO.ReservationsDTO;
 import hannyanggang.catchdoctor.exception.CustomValidationException;
 import hannyanggang.catchdoctor.service.ReservationsService.CheckReservationsService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,7 @@ import java.util.Map;
 public class CheckReservationsController {
     private final CheckReservationsService checkReservationsService;
 
+    @Operation(summary = "예약 조회", description="나의 예약 조회하기")
     @GetMapping("/check")
     public ResponseEntity<?> getReservationsByUserId() {
         try {

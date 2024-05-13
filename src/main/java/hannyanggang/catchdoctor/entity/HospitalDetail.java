@@ -1,5 +1,7 @@
 package hannyanggang.catchdoctor.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,6 +31,7 @@ public class HospitalDetail {
     private Long id;
 
     @OneToOne
+    @JsonIgnore
     @JoinColumn(name="hospital_id")
     private Hospital hospital;
 
