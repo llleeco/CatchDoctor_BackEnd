@@ -39,7 +39,7 @@ public class ReviewService {
             Hospital hospital = optionalHospital.get();
             Review hospitalReview = dtoToEntity(hospitalReviewDTO, user, hospital);
             reviewRepository.save(hospitalReview);
-            return hospitalReview.getReview_id();
+            return hospitalReview.getId();
         } else {
             // 병원이 존재하지 않는 경우 처리할 방법 추가
             return null;
@@ -72,7 +72,7 @@ public class ReviewService {
 
     private ReviewDto entityToDto(Review hospitalReview){
         ReviewDto hospitalReviewDTO = ReviewDto.builder()
-                .review_id(hospitalReview.getReview_id())
+                .review_id(hospitalReview.getId())
                 .hospital_id(hospitalReview.getHospital().getHospitalid())
                 .user_id(hospitalReview.getUser().getUserid())
                 .username(hospitalReview.getUser().getName())

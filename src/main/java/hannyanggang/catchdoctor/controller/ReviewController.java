@@ -19,7 +19,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/reviews")
+    @RequestMapping("/reviews")
 @RequiredArgsConstructor
 @Controller
 public class ReviewController {

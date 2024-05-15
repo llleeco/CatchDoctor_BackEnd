@@ -1,5 +1,6 @@
 package hannyanggang.catchdoctor.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import hannyanggang.catchdoctor.role.UserRole;
@@ -11,6 +12,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -43,6 +45,7 @@ public class Hospital {
     private UserRole role; // USER
 
     @OneToOne(cascade = CascadeType.ALL)
+    @ToString.Exclude
     @JoinColumn(name="hospital_detail_id")
     private HospitalDetail hospitalDetail;
 
@@ -50,9 +53,8 @@ public class Hospital {
 //    @JoinColumn(name="hospital_oepnapi_id")
 //    private OpenApiHospital openApiHospital;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "review_id")
-    private List<Review> review;
+    @OneToMany(mappedBy = "hospital")
+    private List<Review> review = new ArrayList<>();
 
     @OneToMany(mappedBy = "hospital")
     private Set<Reservations> reservations; //예약
