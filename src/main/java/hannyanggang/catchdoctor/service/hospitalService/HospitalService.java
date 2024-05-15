@@ -4,6 +4,7 @@ import hannyanggang.catchdoctor.dto.LoginRequestDto;
 import hannyanggang.catchdoctor.dto.hospitalDto.*;
 import hannyanggang.catchdoctor.entity.*;
 import hannyanggang.catchdoctor.repository.BookMarkRepository;
+import hannyanggang.catchdoctor.repository.hospitalRepository.OpenApiRepository;
 import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalDetailRepository;
 import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalRepository;
 import hannyanggang.catchdoctor.repository.hospitalRepository.OpenApiRepository;

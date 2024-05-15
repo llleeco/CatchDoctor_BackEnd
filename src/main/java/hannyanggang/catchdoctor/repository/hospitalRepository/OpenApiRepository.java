@@ -15,4 +15,5 @@ public interface OpenApiRepository extends JpaRepository<OpenApiHospital, Long>,
 
     @Query("SELECT o FROM OpenApiHospital o WHERE o.hospital = ?1")
     OpenApiHospital findByHospital(Hospital hospital);
+
 }
