@@ -44,8 +44,9 @@ public class OpenApiService {
             // SearchResponseDto 객체 생성
             return new SearchResponseDto(
                     openApiHospital.getId(),
-                    openApiHospital.getAddress(),
                     openApiHospital.getHospitalname(),
+                    openApiHospital.getTel(),
+                    openApiHospital.getAddress(),
                     openApiHospital.getHospital(),
                     distance
             );
@@ -86,6 +87,7 @@ public class OpenApiService {
             return new SearchResponseDto(
                     openApiHospital.getId(),
                     openApiHospital.getAddress(),
+                    openApiHospital.getTel(),
                     openApiHospital.getHospitalname(),
                     openApiHospital.getHospital()
             );

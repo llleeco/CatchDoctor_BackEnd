@@ -13,9 +13,10 @@ public class SearchResponseDto {
     private Long id;
     private String hospitalname;
     private String address;
+    private String tel;
     private Hospital hospital;
     private Double distance;
 
-    public SearchResponseDto(Long id, String hospitalname, String address, Hospital hospital) {
+    public SearchResponseDto(Long id, String hospitalname, String address, String tel, Hospital hospital) {
     }
 }
