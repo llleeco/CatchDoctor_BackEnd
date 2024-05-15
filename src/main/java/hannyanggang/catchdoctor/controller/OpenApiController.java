@@ -2,10 +2,13 @@ package hannyanggang.catchdoctor.controller;
 
 import hannyanggang.catchdoctor.entity.OpenApiHospital;
 import hannyanggang.catchdoctor.repository.hospitalRepository.OpenApiRepository;
+import hannyanggang.catchdoctor.response.Response;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.BufferedReader;
@@ -21,9 +24,6 @@ public class OpenApiController {
 
     @GetMapping("/api")
     public String save() throws IOException {
-
-
-
         String result = "";
 
         try {
@@ -95,5 +95,11 @@ public class OpenApiController {
             return null;
         }
     }
+    @GetMapping("/api/hospitals")
+    @ResponseStatus(HttpStatus.OK)
+    public Response<?> findAllHospital() {
+        return new Response<>("true", "조회 성공", openApiRepository.findAll());
+    }
+
 
 }
