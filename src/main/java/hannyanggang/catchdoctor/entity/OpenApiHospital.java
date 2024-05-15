@@ -1,5 +1,6 @@
 package hannyanggang.catchdoctor.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -11,6 +12,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Data
@@ -40,11 +43,12 @@ public class OpenApiHospital {
     @Column(name = "mapY")
     private Double mapY; // 경도
 
-    @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name="hospital_id")
     private Hospital hospital;
 
-    public OpenApiHospital(Long id, String hospitalname, String address, String tel, String addnum, Double mapX, Double mapY) {
+    public OpenApiHospital(Long id, String hospitalname, String address, String tel, String addnum, Double mapX, Double mapY, Hospital hospital) {
         this.id = id;
         this.hospitalname = hospitalname;
         this.address = address;
@@ -52,6 +56,7 @@ public class OpenApiHospital {
         this.addnum = addnum;
         this.mapX = mapX;
         this.mapY = mapY;
+        this.hospital = hospital;
     }
 
 }

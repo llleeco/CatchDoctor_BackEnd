@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import hannyanggang.catchdoctor.dto.chatDto.ChatGPTRequestDto;
 import hannyanggang.catchdoctor.dto.chatDto.ChatGPTResponseDto;
 import hannyanggang.catchdoctor.dto.chatDto.ChatResponseStorage;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,7 @@ public class ChatController {
     @Autowired
     private ChatResponseStorage responseStorage;
 
+    @Operation(summary = "챗봇", description="챗봇 질문 요청")
     @GetMapping("/chat")
     public String chat(@RequestParam(name = "prompt") String prompt) {
         // 메시지를 추가하여 OpenAPI에게 요청을 보냄

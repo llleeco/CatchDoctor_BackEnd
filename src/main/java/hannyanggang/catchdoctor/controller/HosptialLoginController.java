@@ -36,6 +36,7 @@ public class HosptialLoginController {
         return new Response<>("true", "가입 성공", hospitalService.register(joinRequest));
     }
 
+    @Operation(summary = "병원 로그인", description="병원 로그인 진행")
     @PostMapping("/login")
     public String login(@RequestBody LoginRequestDto loginRequest) {
 

@@ -5,6 +5,7 @@ import hannyanggang.catchdoctor.entity.User;
 import hannyanggang.catchdoctor.exception.CustomValidationException;
 import hannyanggang.catchdoctor.service.ReservationsService.ReservationsService;
 import hannyanggang.catchdoctor.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.http.HttpStatus;
@@ -29,6 +30,7 @@ public class ReservationsController {
     private final ReservationsService reservationsService;
     private final UserService userService;
 
+    @Operation(summary = "병원 예약", description="병원 예약 진행")
     @PostMapping
     public ResponseEntity<?> createReservation(@RequestBody ReservationsDTO reservationsDTO) {
         try {

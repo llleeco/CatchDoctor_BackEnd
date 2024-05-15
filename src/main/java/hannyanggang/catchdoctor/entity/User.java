@@ -30,9 +30,9 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDate birthday;
+//    @Column(nullable = false)
+//    @DateTimeFormat(pattern = "yyyy-MM-dd")
+//    private LocalDate birthday;
 
     private UserRole role; // USER
 

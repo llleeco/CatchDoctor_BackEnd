@@ -25,17 +25,10 @@ public class UserController {
         return new Response<>("true", "조회 성공", userService.findAll());
     }
 
-    @Operation(summary="유저 찾기", description = "개별 유저 조회")
+    @Operation(summary="유저 찾기", description = "개별 회원을 조회한다.")
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/users/{userid}")
     public Response<?> findUser(@PathVariable("userid") Long userid) {
         return new Response<>("true", "조회 성공", userService.findUser(userid));
     }
-
-//    @Operation(summary = "회원가입", description="회원가입 진행")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    @PostMapping("/users/join")
-//    public Response<?> register(@RequestBody UserRegisterDto registerDto) {
-//        return new Response<>("true", "가입 성공", userService.register(registerDto));
-//    }
 }

@@ -22,6 +22,7 @@ public class OpenApiController {
 
     private final OpenApiRepository openApiRepository;
 
+    @Operation(summary = "병원 OPENAPI 저장", description="OPENAPI에서 병원데이터 DB에 저장하기")
     @GetMapping("/api")
     public String save() throws IOException {
         String result = "";
@@ -59,7 +60,8 @@ public class OpenApiController {
                         telno,
                         postNo,
                         xPos,
-                        yPos
+                        yPos,
+                        null
                 );
                 openApiRepository.save(openApiHospital);
             }

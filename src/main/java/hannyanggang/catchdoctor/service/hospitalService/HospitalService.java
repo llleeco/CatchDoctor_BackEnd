@@ -7,20 +7,17 @@ import hannyanggang.catchdoctor.repository.BookMarkRepository;
 import hannyanggang.catchdoctor.repository.hospitalRepository.OpenApiRepository;
 import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalDetailRepository;
 import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalRepository;
+import hannyanggang.catchdoctor.repository.hospitalRepository.OpenApiRepository;
+import hannyanggang.catchdoctor.role.UserRole;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -73,6 +70,8 @@ public class HospitalService {
                 .id(registerDto.getId())
                 .password(registerDto.getPassword())
                 .name(registerDto.getName())
+                .addnum(registerDto.getAddnum())
+                .role(UserRole.USER)
                 .build();
         return hospitalRepository.save(hospital);
     }
@@ -166,16 +165,22 @@ public class HospitalService {
     public HospitalDetail getHospitalDetailByHospitalId(String hospitalId) {
         Hospital hospital = hospitalRepository.findById(hospitalId);
         HospitalDetail hospitalDetail = hospitalDetailRepository.findByHospital(hospital);
-
         return hospitalDetail;
     }
 
-    public Hospital connectOpenApi(HospitalSetDto hospitalSetDto,String hospitalId) {
-        String addnum = hospitalSetDto.getAddnum();
-        String hospitalname = hospitalSetDto.getHospitalname();
+    public Hospital connectOpenApi(String hospitalId) {
+       Hospital hospital = hospitalRepository.findById(hospitalId);
+        String addnum = hospital.getAddnum();
+        String hospitalname = hospital.getName();
         OpenApiHospital openapi = openApiRepository.findByAddressAndHospitalName(addnum,hospitalname);
-        Hospital hospital = hospitalRepository.findById(hospitalId);
-        hospital.setOpenApiHospital(openapi);
+
+        // 이미 연결된 openapi가 존재하는지 확인
+        OpenApiHospital existingOpenApi = openApiRepository.findByHospital(hospital);
+        if (existingOpenApi != null) {
+            throw new RuntimeException("이미 연결된 openapi가 존재합니다.");
+        }
+
+        openapi.setHospital(hospital);
         return hospitalRepository.save(hospital);
     }
 

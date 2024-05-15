@@ -1,10 +1,12 @@
 package hannyanggang.catchdoctor.service.hospitalService;
 
 import hannyanggang.catchdoctor.dto.hospitalDto.SearchResponseDto;
+import hannyanggang.catchdoctor.entity.Hospital;
 import hannyanggang.catchdoctor.entity.OpenApiHospital;
 import hannyanggang.catchdoctor.repository.hospitalRepository.OpenApiRepository;
 import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -30,20 +32,22 @@ public class OpenApiService {
 
         System.out.println("query = " + query);
         // 동적 쿼리로 병원 검색
-        Page<OpenApiHospital> hospitals = openApiRepository.searchWithDynamicQuery(query, pageRequest);
-        System.out.println("hospitals = " + hospitals);
+        Page<OpenApiHospital> openApiHospitals = openApiRepository.searchWithDynamicQuery(query, pageRequest);
+        System.out.println("hospitals = " + openApiHospitals);
         // 병원 목록을 HospitalDTO 목록으로 변환
-        return hospitals.stream().map(hospital -> {
-
-            double hospitalLatitude = hospital.getMapY();
-            double hospitalLongitude = hospital.getMapX();
+        return openApiHospitals.stream().map(openApiHospital -> {
+            double hospitalLatitude = openApiHospital.getMapY();
+            double hospitalLongitude = openApiHospital.getMapX();
 
             double distance = calculateDistance(MyMapX, MyMapY, hospitalLatitude, hospitalLongitude);
 
             // SearchResponseDto 객체 생성
             return new SearchResponseDto(
-                    hospital.getId(),
-                    hospital.getHospitalname(),
+                    openApiHospital.getId(),
+                    openApiHospital.getHospitalname(),
+                    openApiHospital.getAddress(),
+                    openApiHospital.getTel(),
+                    openApiHospital.getHospital(),
                     distance
             );
         }).sorted(Comparator.comparingDouble(SearchResponseDto::getDistance))
@@ -75,15 +79,17 @@ public class OpenApiService {
 
         String today = new SimpleDateFormat("EEEE", Locale.ENGLISH).format(new Date());
         PageRequest pageRequest = PageRequest.of(page,size);
-        Page<OpenApiHospital> hospitals = openApiRepository.findAll(pageRequest);
-
+        Page<OpenApiHospital> openApiHospitals = openApiRepository.findAll(pageRequest);
         // 병원 목록을 HospitalDTO 목록으로 변환
-        return hospitals.stream().map(hospital -> {
+        return openApiHospitals.stream().map(openApiHospital -> {
             // HospitalDTO 객체 생성
             // SearchResponseDto 객체 생성
             return new SearchResponseDto(
-                    hospital.getId(),
-                    hospital.getHospitalname()
+                    openApiHospital.getId(),
+                    openApiHospital.getAddress(),
+                    openApiHospital.getHospitalname(),
+                    openApiHospital.getTel(),
+                    openApiHospital.getHospital()
             );
         }).collect(toList());
 
