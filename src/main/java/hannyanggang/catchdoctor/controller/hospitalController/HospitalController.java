@@ -131,9 +131,9 @@ public class HospitalController {
     // 병원 oepnapi 연결하기
     @Operation(summary = "병원 연결", description="DB에 저장된 병원과 연결하기")
     @PostMapping("/setopenapi")
-    public Response setOpenApi(Authentication authentication, @RequestBody HospitalSetDto hospitalSetDto){
+    public Response setOpenApi(Authentication authentication){
         String hospitalId = authentication.getName(); // getName() -> login Id
-        return new Response("완료", "병원 등록 완료", hospitalService.connectOpenApi(hospitalSetDto,hospitalId));
+        return new Response("완료", "병원 등록 완료", hospitalService.connectOpenApi(hospitalId));
     }
 
     //병원 즐겨찾기

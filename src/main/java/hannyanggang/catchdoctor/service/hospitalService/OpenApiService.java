@@ -45,8 +45,8 @@ public class OpenApiService {
             return new SearchResponseDto(
                     openApiHospital.getId(),
                     openApiHospital.getHospitalname(),
-                    openApiHospital.getTel(),
                     openApiHospital.getAddress(),
+                    openApiHospital.getTel(),
                     openApiHospital.getHospital(),
                     distance
             );
@@ -87,8 +87,8 @@ public class OpenApiService {
             return new SearchResponseDto(
                     openApiHospital.getId(),
                     openApiHospital.getAddress(),
-                    openApiHospital.getTel(),
                     openApiHospital.getHospitalname(),
+                    openApiHospital.getTel(),
                     openApiHospital.getHospital()
             );
         }).collect(toList());

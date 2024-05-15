@@ -167,11 +167,11 @@ public class HospitalService {
         return hospitalDetail;
     }
 
-    public Hospital connectOpenApi(HospitalSetDto hospitalSetDto,String hospitalId) {
-        String addnum = hospitalSetDto.getAddnum();
-        String hospitalname = hospitalSetDto.getHospitalname();
+    public Hospital connectOpenApi(String hospitalId) {
+       Hospital hospital = hospitalRepository.findById(hospitalId);
+        String addnum = hospital.getAddnum();
+        String hospitalname = hospital.getName();
         OpenApiHospital openapi = openApiRepository.findByAddressAndHospitalName(addnum,hospitalname);
-        Hospital hospital = hospitalRepository.findById(hospitalId);
 
         // 이미 연결된 openapi가 존재하는지 확인
         OpenApiHospital existingOpenApi = openApiRepository.findByHospital(hospital);
