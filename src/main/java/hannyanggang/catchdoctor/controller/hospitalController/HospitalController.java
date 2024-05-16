@@ -55,7 +55,7 @@ public class HospitalController {
 
     @GetMapping("/findhospital")
     public Response findHospital(@RequestParam Long hospitalid) {
-        return new Response("입력완료", "병원 정보 입력완료", hospitalService.findHospital(hospitalid));
+        return new Response("검색성공", "병원 정보 검색성공", hospitalService.findHospital(hospitalid));
     }
     @Operation(summary = "병원 검색", description="병원 검색하기")
     @GetMapping
