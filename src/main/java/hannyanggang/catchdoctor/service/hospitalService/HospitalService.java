@@ -134,6 +134,7 @@ public class HospitalService {
         }
 
         openapi.setHospital(hospital);
+        hospital.setOpenApiHospital(openapi);
         return hospitalRepository.save(hospital);
     }
 

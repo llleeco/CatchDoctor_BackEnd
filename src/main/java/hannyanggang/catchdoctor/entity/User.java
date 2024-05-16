@@ -38,6 +38,6 @@ public class User {
     private UserRole role; // USER
 
     @OneToMany(mappedBy = "user")
-    @JsonIgnore
+    @JsonManagedReference
     private Set<Reservations> reservations;
 }
