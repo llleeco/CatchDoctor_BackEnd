@@ -14,5 +14,5 @@ public class UserRegisterDto {
     private String id;
     private String password;
     private String name;
-//    private LocalDate birthday;
+    private LocalDate birthday;
 }

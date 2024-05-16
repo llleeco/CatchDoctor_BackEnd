@@ -36,7 +36,7 @@ public class UserService {
                 .id(registerDto.getId())
                 .password(registerDto.getPassword())
                 .name(registerDto.getName())
-//                .birthday(registerDto.getBirthday())
+                .birthday(registerDto.getBirthday())
                 .role(UserRole.USER)
                 .build();
         return userRepository.save(user);
