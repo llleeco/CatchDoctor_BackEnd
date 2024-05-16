@@ -89,5 +89,10 @@ public class HospitalDetail {
     @Column(name = "hol_close")
     private String hol_close;
 
+    @Column(name = "lunch_start")
+    private String lunch_start; // 점심시간
+    @Column(name = "lunch_end")
+    private String lunch_end;
+
     // 병원 이미지는 추후 추가예정
 }

@@ -1,6 +1,7 @@
 package hannyanggang.catchdoctor.dto.hospitalDto;
 
 import hannyanggang.catchdoctor.entity.Hospital;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,5 +30,7 @@ public class HospitalDetailDto {
     private String sun_close;
     private String hol_open; // 공휴일
     private String hol_close;
+    private String lunch_start; // 점심시간
+    private String lunch_end;
 
 }

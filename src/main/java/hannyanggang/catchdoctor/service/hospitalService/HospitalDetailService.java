@@ -43,6 +43,8 @@ public class HospitalDetailService {
                 .sun_close(hospitalDetailsDto.getSun_close())
                 .hol_open(hospitalDetailsDto.getHol_open())
                 .hol_close(hospitalDetailsDto.getHol_close())
+                .lunch_start(hospitalDetailsDto.getLunch_start())
+                .lunch_end(hospitalDetailsDto.getLunch_end())
                 .build();
         hospital.setHospitalDetail(hospitalDetail);
         hospitalDetailRepository.save(hospitalDetail);
