@@ -53,8 +53,9 @@ public class HospitalController {
         this.userRepository = userRepository1;
     }
 
-    @GetMapping("/findhospital")
-    public Response findHospital(@RequestParam Long hospitalid) {
+    @Operation(summary = "특정 병원 정보", description = "특정 병원 정보요청하기")
+    @GetMapping("/findhospital/{hospitalid}")
+    public Response findHospital(@PathVariable Long hospitalid) {
         return new Response("검색성공", "병원 정보 검색성공", hospitalService.findHospital(hospitalid));
     }
     @Operation(summary = "병원 검색", description="병원 검색하기")
