@@ -53,6 +53,10 @@ public class HospitalController {
         this.userRepository = userRepository1;
     }
 
+    @GetMapping("/findhospital")
+    public Response findHospital(@RequestParam Long hospitalid) {
+        return new Response("입력완료", "병원 정보 입력완료", hospitalService.findHospital(hospitalid));
+    }
     @Operation(summary = "병원 검색", description="병원 검색하기")
     @GetMapping
     public ResponseEntity<?> searchHospitals(
@@ -136,25 +140,4 @@ public class HospitalController {
         return new Response("완료", "병원 등록 완료", hospitalService.connectOpenApi(hospitalId));
     }
 
-    //병원 즐겨찾기
-    @Operation(summary = "병원 즐겨찾기", description="병원 즐겨찾기 등록")
-    @PostMapping("/{id}/bookmarks")
-    @ResponseStatus(HttpStatus.OK)
-    public Response2 bookmarkHospital(@PathVariable Long id){
-        return Response2.success(hospitalService.updateBookmarkHospital(id, getPrincipal()));
-    }
-
-    @Operation(summary = "나의 즐겨찾기 요청", description="나의 병원 즐겨찾기 요청하기")
-    @GetMapping("/bookmarks")
-    @ResponseStatus(HttpStatus.OK)
-    public Response2 findFavoriteBoards(@RequestParam(defaultValue = "0") Integer page){
-        return Response2.success(hospitalService.findBookmarkHospitals(page, getPrincipal()));
-    }
-    public User getPrincipal(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUserid(Long.parseLong(authentication.getName()));
-        String loginid = user.getId();
-        return userRepository.findByUserid(Long.parseLong(authentication.getName()));
-
-    }
 }

@@ -1,5 +1,7 @@
 package hannyanggang.catchdoctor.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -44,6 +46,7 @@ public class OpenApiHospital {
     private Double mapY; // 경도
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JsonBackReference
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name="hospital_id")
     private Hospital hospital;

@@ -1,6 +1,7 @@
 package hannyanggang.catchdoctor.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -8,11 +9,11 @@ import hannyanggang.catchdoctor.role.UserRole;
 import java.time.LocalDate;
 import java.util.Set;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Getter
+@Setter
 @Builder
 public class User {
 
@@ -37,5 +38,6 @@ public class User {
     private UserRole role; // USER
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private Set<Reservations> reservations;
 }

@@ -44,7 +44,7 @@ public class ReservationsController {
                 String Id = authentication.getName();
                 User user = userService.findUser(Long.parseLong(Id));
                 String userId = user.getId();
-                validateRequest(reservationsDTO);
+//                validateRequest(reservationsDTO);
                 return reservationsService.createReservation(reservationsDTO, userId);
 
             } else {

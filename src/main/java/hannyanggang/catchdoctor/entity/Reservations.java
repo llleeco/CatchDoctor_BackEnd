@@ -1,5 +1,7 @@
 package hannyanggang.catchdoctor.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import hannyanggang.catchdoctor.exception.CustomValidationException;
 import hannyanggang.catchdoctor.repository.UserRepository;
 import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalRepository;
@@ -42,10 +44,12 @@ public class Reservations {
     private String status;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name="userid")
     private User user;
 
     @ManyToOne
+    @JsonBackReference
     @JoinColumn(name="hospitalid", nullable = false)
     private Hospital hospital;
 

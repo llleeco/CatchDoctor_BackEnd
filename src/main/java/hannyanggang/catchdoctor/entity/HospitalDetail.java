@@ -1,5 +1,6 @@
 package hannyanggang.catchdoctor.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.Column;
@@ -16,14 +17,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Getter
+@Setter
 @Builder
 @Table(name="HospitalDetail")
 public class HospitalDetail {
@@ -33,7 +35,7 @@ public class HospitalDetail {
     private Long id;
 
     @OneToOne
-    @JsonIgnore
+    @JsonBackReference
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name="hospital_id")
     private Hospital hospital;
