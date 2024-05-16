@@ -23,7 +23,7 @@ public class ReviewDto {
 
     private String username;
 
-    private int grade;
+    private float grade;
 
     private String text;
 

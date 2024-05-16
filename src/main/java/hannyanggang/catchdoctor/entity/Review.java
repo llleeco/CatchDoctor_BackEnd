@@ -29,12 +29,11 @@ public class Review {
     private Hospital hospital;
 
     @ManyToOne
-    @JsonBackReference
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private User user;
 
-    private int grade;
+    private float grade;
 
     private String text;
 
@@ -44,7 +43,7 @@ public class Review {
     private LocalDate modDate;
 
     // 추가
-    public void changeGrade(int grade){
+    public void changeGrade(float grade){
         this.grade = grade;
     }
 
