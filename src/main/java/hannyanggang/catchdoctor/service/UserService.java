@@ -1,5 +1,6 @@
 package hannyanggang.catchdoctor.service;
 
+import hannyanggang.catchdoctor.dto.BookmarkListDto;
 import hannyanggang.catchdoctor.dto.LoginRequestDto;
 import hannyanggang.catchdoctor.dto.hospitalDto.HospitalFindAllResponseDto;
 import hannyanggang.catchdoctor.dto.hospitalDto.HospitalFindAllWithPagingResponseDto;
@@ -119,6 +120,11 @@ public class UserService {
             // 즐겨찾기가 이미 존재하지 않는 경우에 대한 처리
             return "이 병원이 즐겨찾기에 존재하지 않습니다.";
         }
+    }
+    public List<BookmarkListDto> findBookmarkAll(){
+        return bookMarkRepository.findAll().stream()
+                .map(BookmarkListDto::new)
+                .collect(toList());
     }
 
     @Transactional(readOnly = true)

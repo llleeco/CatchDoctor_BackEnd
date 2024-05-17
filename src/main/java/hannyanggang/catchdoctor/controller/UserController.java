@@ -48,6 +48,13 @@ public class UserController {
         return Response2.success(userService.updateBookmarkHospital(id, getPrincipal()));
     }
 
+    @Operation(summary = "모든 즐겨찾기 요청", description="모든 즐겨찾기 요청하기")
+    @GetMapping("/bookmarks/all")
+    @ResponseStatus(HttpStatus.OK)
+    public Response findBookmarkAll(Integer page){
+        return new Response("true","리턴 성공",userService.findBookmarkAll());
+    }
+
     @Operation(summary = "나의 즐겨찾기 요청", description="나의 병원 즐겨찾기 요청하기")
     @GetMapping("/bookmarks")
     @ResponseStatus(HttpStatus.OK)

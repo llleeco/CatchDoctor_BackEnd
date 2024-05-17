@@ -95,4 +95,5 @@ public class HospitalDetail {
     private String lunch_end;
 
     // 병원 이미지는 추후 추가예정
+
 }
