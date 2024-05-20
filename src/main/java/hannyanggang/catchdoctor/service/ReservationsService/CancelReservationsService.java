@@ -22,13 +22,14 @@ public class CancelReservationsService {
             Optional<Reservations> reservation = reservationsRepository.findByUser_IdAndReservationId(reservationId, userId);
             if (reservation.isPresent()) {
                 Reservations res = reservation.get();
-                // 진료 전 상태인지 확인
-                if ("진료전".equals(res.getStatus())) {
-                    reservationsRepository.delete(res);
+                // 예약신청 상태인지 확인
+                if ("예약신청".equals(res.getStatus())) {
+                    res.setStatus("예약취소");
+                    reservationsRepository.save(res);
                     return true;
                 } else {
-                    // 예약 상태가 진료 전이 아닐 경우
-                    throw new CustomValidationException(HttpStatus.BAD_REQUEST.value(), "진료완료된 예약건입니다.");
+                    // 예약 상태가 예약신청이 아닐 경우
+                    throw new CustomValidationException(HttpStatus.BAD_REQUEST.value(), "예약신청 상태가 아닙니다.");
                 }
             } else {
                 return false;

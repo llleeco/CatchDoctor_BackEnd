@@ -58,6 +58,7 @@ public class HospitalController {
     public Response findHospital(@PathVariable Long hospitalid) {
         return new Response("검색성공", "병원 정보 검색성공", hospitalService.findHospital(hospitalid));
     }
+
     @Operation(summary = "병원 검색", description="병원 검색하기")
     @GetMapping
     public ResponseEntity<?> searchHospitals(
@@ -84,7 +85,7 @@ public class HospitalController {
                     if (!isValidDepartment(department)) {
                         throw new CustomValidationException(HttpStatus.BAD_REQUEST.value(), "잘못된 입력");
                     }
-               //     responseDTOs = hospitalService.searchByDepartment(department, page, limit);
+                    responseDTOs = openApiService.searchByDepartment(department, mapx, mapy, page, limit);
 
                 } else if (query != null && !query.isEmpty()) { //쿼리로 검색
                     responseDTOs = openApiService.searchHospitalsWithDetails(query, mapx, mapy, page, limit);
@@ -135,10 +136,14 @@ public class HospitalController {
 
     // 병원 oepnapi 연결하기
     @Operation(summary = "병원 연결", description="DB에 저장된 병원과 연결하기")
-    @PostMapping("/setopenapi")
-    public Response setOpenApi(Authentication authentication){
+    @PostMapping("/setopenapi/{addnum}")
+    public Response setOpenApi(Authentication authentication, @PathVariable String addnum){
         String hospitalId = authentication.getName(); // getName() -> login Id
-        return new Response("완료", "병원 등록 완료", hospitalService.connectOpenApi(hospitalId));
+        return new Response("완료", "병원 등록 완료", hospitalService.connectOpenApi(hospitalId,addnum));
     }
 
+    @GetMapping("/checkhospital/{hospitalname}")
+    public Response checkhospital(@PathVariable String hospitalname){
+        return new Response("성공", "등록된 병원이름 확인", openApiService.checkhospital(hospitalname));
+    }
 }

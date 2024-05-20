@@ -34,7 +34,7 @@ public class HospitalService {
                 .id(registerDto.getId())
                 .password(registerDto.getPassword())
                 .name(registerDto.getName())
-                .addnum(registerDto.getAddnum())
+//                .addnum(registerDto.getAddnum())
                 .role(UserRole.USER)
                 .build();
         return hospitalRepository.save(hospital);
@@ -121,12 +121,14 @@ public class HospitalService {
         return hospitalDetail;
     }
 
-    public Hospital connectOpenApi(String hospitalId) {
+    public Hospital connectOpenApi(String hospitalId,String addNum) {
        Hospital hospital = hospitalRepository.findById(hospitalId);
-        String addnum = hospital.getAddnum();
-        String hospitalname = hospital.getName();
-        OpenApiHospital openapi = openApiRepository.findByAddressAndHospitalName(addnum,hospitalname);
-
+        String hospitalName = hospital.getName();
+        OpenApiHospital openapi = openApiRepository.findByAddressAndHospitalName(addNum,hospitalName);
+        // openapi가 있는지 확인
+        if (openapi == null) {
+            throw new RuntimeException("우펀번호가 틀렸습니다.");
+        }
         // 이미 연결된 openapi가 존재하는지 확인
         OpenApiHospital existingOpenApi = openApiRepository.findByHospital(hospital);
         if (existingOpenApi != null) {

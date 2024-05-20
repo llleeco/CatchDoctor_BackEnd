@@ -10,8 +10,13 @@ import org.springframework.data.jpa.repository.Query;
 public interface OpenApiRepository extends JpaRepository<OpenApiHospital, Long>, OpenApiRepositoryCustom  {
     Page<OpenApiHospital> searchWithDynamicQuery(String query, Pageable pageable);
 
+    Page<OpenApiHospital> searchByDepartment(String department, Pageable pageable);
+
     @Query("SELECT o FROM OpenApiHospital o WHERE o.addnum = ?1 AND o.hospitalname = ?2")
     OpenApiHospital findByAddressAndHospitalName(String addnum, String hospitalName);
+
+    @Query("SELECT o FROM OpenApiHospital o WHERE o.hospitalname = ?1")
+    OpenApiHospital findByHospitalName(String hospitalName);
 
     @Query("SELECT o FROM OpenApiHospital o WHERE o.hospital = ?1")
     OpenApiHospital findByHospital(Hospital hospital);

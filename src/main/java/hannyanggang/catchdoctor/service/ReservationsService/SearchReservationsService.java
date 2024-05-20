@@ -43,6 +43,34 @@ public class SearchReservationsService {
         }
     }
 
+    public List<ReservationsDTO> getReservationsByHospitalId(String hospitalId) {
+
+        try{
+            List<Reservations> reservations = reservationsRepository.findByHospital_IdOrderByReservationDateAscReservationTimeAsc(hospitalId);
+            List<ReservationsDTO> appointmentDTOs = new ArrayList<>();
+
+            for (Reservations reservation : reservations) {
+                ReservationsDTO dto = new ReservationsDTO(
+                        reservation.getReservationId(),
+                        reservation.getReservationDate(),
+                        reservation.getReservationTime(),
+                        reservation.getStatus(),
+                        reservation.getHospital().getHospitalid(),
+                        reservation.getHospital().getName(),
+                        reservation.getUser().getName()
+
+                );
+                appointmentDTOs.add(dto);
+            }
+            return appointmentDTOs;
+
+        }catch (Exception e){
+            System.out.println(e);
+            return null;
+        }
+
+    }
+
     private ReservationsDTO convertToDTO(Reservations reservation) {
         ReservationsDTO dto = new ReservationsDTO(
                 reservation.getReservationId(), // int -> Long 변환

@@ -22,7 +22,7 @@ public class CheckReservationsService {
     public List<ReservationsDTO> getReservationsByUserId(String userId) {
 
         try{
-            List<Reservations> reservations = reservationsRepository.findByUser_IdOrderByReservationDateDesc(userId);
+            List<Reservations> reservations = reservationsRepository.findByUser_IdOrderByReservationDateAsc(userId);
             List<ReservationsDTO> appointmentDTOs = new ArrayList<>();
 
             for (Reservations reservation : reservations) {

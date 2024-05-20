@@ -42,8 +42,8 @@ public class Hospital {
     @Column(nullable = false)
     private String name;
 
-    @Column(nullable = false)
-    private String addnum;
+//    @Column(nullable = false)
+//    private String addnum;
 
     private UserRole role; // USER
 
@@ -53,7 +53,7 @@ public class Hospital {
     private HospitalDetail hospitalDetail;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="hospital_oepnapi_id")
+    @JoinColumn(name="hospital_openapi_id")
     @JsonManagedReference
     private OpenApiHospital openApiHospital;
 

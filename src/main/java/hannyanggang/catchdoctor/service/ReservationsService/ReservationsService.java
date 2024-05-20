@@ -41,7 +41,7 @@ public class ReservationsService {
     }
 
     @Transactional
-    public ResponseEntity<?> createReservation(ReservationsDTO reservationsDTO, String userId) {
+    public ResponseEntity<?>createReservation(ReservationsDTO reservationsDTO, String userId) {
         LocalDate date = reservationsDTO.getReservationDate();
         LocalTime time = reservationsDTO.getReservationTime();
         Long hospitalId = reservationsDTO.getHospitalid();
@@ -104,7 +104,7 @@ public class ReservationsService {
         reservations.setReservationDate(appointmentsDTO.getReservationDate());
         reservations.setReservationTime(appointmentsDTO.getReservationTime());
         reservations.setHospitalId(appointmentsDTO.getHospitalid(), hospitalRepository);
-        reservations.setStatus("진료전");
+        reservations.setStatus("예약신청");
 
         return reservations;
     }
@@ -140,7 +140,7 @@ public class ReservationsService {
 
     private boolean isMaximumReservationsReached(String userId) {
         int maxReservationCount = 2;
-        int userActiveReservationCount = reservationsRepository.countByUser_IdAndStatus(userId, "진료전");
+        int userActiveReservationCount = reservationsRepository.countByUser_IdAndStatus(userId, "예약신청");
         return userActiveReservationCount >= maxReservationCount;
     }
 }

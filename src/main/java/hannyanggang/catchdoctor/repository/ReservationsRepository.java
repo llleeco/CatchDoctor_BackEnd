@@ -1,5 +1,6 @@
 package hannyanggang.catchdoctor.repository;
 
+import hannyanggang.catchdoctor.entity.Hospital;
 import hannyanggang.catchdoctor.entity.Reservations;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.QueryHint;
@@ -7,8 +8,10 @@ import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,13 +34,17 @@ public interface ReservationsRepository extends JpaRepository<Reservations, Stri
 
     boolean existsByUser_IdAndHospital_HospitalidAndReservationDate(String userId, Long hospitalId, LocalDate date);
 
-    int countByUser_IdAndStatus(String userId, String 진료전);
+    int countByUser_IdAndStatus(String userId, String 예약신청);
 
     @Modifying
-    @Query("UPDATE Reservations a SET a.status = '진료완료' WHERE a.reservationDate < :currentDate AND a.status = '진료전'")
+    @Query("UPDATE Reservations a SET a.status = '진료완료' WHERE a.reservationDate < :currentDate AND a.status = '예약신청'")
     int updateStatusForPastReservations(LocalDate currentDate);
 
     List<Reservations> findByUser_IdOrderByReservationDateDesc(String userId);
+
+    List<Reservations> findByUser_IdOrderByReservationDateAsc(String userId);
+
+    List<Reservations> findByHospital_IdOrderByReservationDateAscReservationTimeAsc(String hospitalId);
 
     @Query("SELECT a FROM Reservations a JOIN a.user p JOIN a.hospital h WHERE p.id = :id AND h.name LIKE :name AND a.reservationDate = :reservationDate ORDER BY a.reservationDate DESC")
     List<Reservations> findByUser_IdAndHospital_NameLikeAndReservationDate(@Param("id") String id, @Param("name") String name, @Param("reservationDate") LocalDate reservationDate);
@@ -51,4 +58,6 @@ public interface ReservationsRepository extends JpaRepository<Reservations, Stri
     //예약 취소하기 위해
     @Query("SELECT a FROM Reservations a WHERE a.user.id = :id AND a.reservationId = :reservationId")
     Optional<Reservations> findByUser_IdAndReservationId(@Param("reservationId") Long reservationId, @Param("id") String id);
+
+    Reservations findByHospitalAndReservationDateAndReservationTime(Hospital hospital, LocalDate date, LocalTime time);
 }

@@ -9,5 +9,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OpenApiRepositoryCustom {
     Page<OpenApiHospital> searchWithDynamicQuery(String query, Pageable pageable);
+    Page<OpenApiHospital> searchByDepartment(String department, Pageable pageable);
 
 }

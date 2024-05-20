@@ -3,8 +3,10 @@ package hannyanggang.catchdoctor.service.hospitalService;
 import hannyanggang.catchdoctor.dto.hospitalDto.SearchResponseDto;
 import hannyanggang.catchdoctor.entity.Hospital;
 import hannyanggang.catchdoctor.entity.OpenApiHospital;
+import hannyanggang.catchdoctor.entity.Reservations;
 import hannyanggang.catchdoctor.repository.hospitalRepository.OpenApiRepository;
 import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalRepository;
+import hannyanggang.catchdoctor.response.Response;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
@@ -53,6 +55,31 @@ public class OpenApiService {
         }).sorted(Comparator.comparingDouble(SearchResponseDto::getDistance))
         .collect(Collectors.toList());
     }
+    public List<SearchResponseDto> searchByDepartment(String department, double MyMapX, double MyMapY, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page,size);
+        System.out.println("department = " + department);
+        // 동적 쿼리로 병원 검색
+        Page<OpenApiHospital> openApiHospitals = openApiRepository.searchByDepartment(department, pageRequest);
+        System.out.println("hospitals = " + openApiHospitals);
+        // 병원 목록을 HospitalDTO 목록으로 변환
+        return openApiHospitals.stream().map(openApiHospital -> {
+                    double hospitalLatitude = openApiHospital.getMapY();
+                    double hospitalLongitude = openApiHospital.getMapX();
+
+                    double distance = calculateDistance(MyMapX, MyMapY, hospitalLatitude, hospitalLongitude);
+
+                    // SearchResponseDto 객체 생성
+                    return new SearchResponseDto(
+                            openApiHospital.getId(),
+                            openApiHospital.getHospitalname(),
+                            openApiHospital.getAddress(),
+                            openApiHospital.getTel(),
+                            openApiHospital.getHospital(),
+                            distance
+                    );
+                }).sorted(Comparator.comparingDouble(SearchResponseDto::getDistance))
+                .collect(Collectors.toList());
+    }
 
     // 두 지점 간의 거리를 계산하는 메서드
     private double calculateDistance(double myLatitude, double myLongitude, double hospitalLatitude, double hospitalLongitude) {
@@ -94,4 +121,13 @@ public class OpenApiService {
         }).collect(toList());
 
     }
+    public boolean checkhospital(String hospitalname){
+        OpenApiHospital openApiHospital = openApiRepository.findByHospitalName(hospitalname);
+        if (openApiHospital == null) {
+            return false;
+        }
+        String openApiName = openApiHospital.getHospitalname();
+        return hospitalname.equals(hospitalname);
+    }
+
 }

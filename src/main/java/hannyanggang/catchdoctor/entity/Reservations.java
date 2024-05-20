@@ -44,7 +44,6 @@ public class Reservations {
     private String status;
 
     @ManyToOne
-    @JsonBackReference
     @JoinColumn(name="userid")
     private User user;
 

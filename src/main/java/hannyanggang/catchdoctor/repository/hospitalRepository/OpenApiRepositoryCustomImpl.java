@@ -1,11 +1,13 @@
 package hannyanggang.catchdoctor.repository.hospitalRepository;
 
 import hannyanggang.catchdoctor.entity.Hospital;
+import hannyanggang.catchdoctor.entity.HospitalDetail;
 import hannyanggang.catchdoctor.entity.OpenApiHospital;
 import hannyanggang.catchdoctor.exception.CustomValidationException;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +33,7 @@ public class OpenApiRepositoryCustomImpl implements OpenApiRepositoryCustom {
         CriteriaQuery<OpenApiHospital> cq = cb.createQuery(OpenApiHospital.class);
         Root<OpenApiHospital> hospitalRoot = cq.from(OpenApiHospital.class);
 
-        if(query != null && !query.isEmpty()) {
+        if (query != null && !query.isEmpty()) {
             String[] searchTerms = query.split("\\s+"); // 검색어를 공백을 기준으로 분리
             List<Predicate> orPredicates = new ArrayList<>();
             try {
@@ -66,5 +68,41 @@ public class OpenApiRepositoryCustomImpl implements OpenApiRepositoryCustom {
             }
         }
         return Page.empty(); // 쿼리가 비어있는 경우 빈 페이지 반환
+    }
+
+    @Override
+    public Page<OpenApiHospital> searchByDepartment(String department, Pageable pageable) {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<OpenApiHospital> cq = cb.createQuery(OpenApiHospital.class);
+        Root<OpenApiHospital> hospitalRoot = cq.from(OpenApiHospital.class);
+
+        if (department != null && !department.isEmpty()) {
+            try {
+                // hospital -> detail 조인 생성
+                Join<OpenApiHospital, Hospital> hospitalJoin = hospitalRoot.join("hospital");
+                Join<Hospital, HospitalDetail> detailJoin = hospitalJoin.join("hospitalDetail");
+
+                // department 조건 추가
+                Predicate departmentPredicate = cb.like(detailJoin.get("department"), "%" + department + "%");
+                cq.where(departmentPredicate);
+
+                // 페이징 처리 적용
+                int totalResults = entityManager.createQuery(cq).getResultList().size();
+                int offset = pageable.getPageNumber() * pageable.getPageSize();
+                int pageSize = pageable.getPageSize();
+
+                cq.select(hospitalRoot);
+                List<OpenApiHospital> hospitals = entityManager.createQuery(cq)
+                        .setFirstResult(offset)
+                        .setMaxResults(pageSize)
+                        .getResultList();
+
+                return new PageImpl<>(hospitals, pageable, totalResults);
+
+            } catch (Exception e) {
+                throw new CustomValidationException(HttpStatus.BAD_REQUEST.value(), "Department search failed");
+            }
+        }
+        return Page.empty(); // department가 비어있는 경우 빈 페이지 반환
     }
 }
