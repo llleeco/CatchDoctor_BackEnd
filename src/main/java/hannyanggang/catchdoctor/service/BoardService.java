@@ -2,23 +2,30 @@ package hannyanggang.catchdoctor.service;
 
 import hannyanggang.catchdoctor.dto.BoardDto;
 import hannyanggang.catchdoctor.entity.Board;
+import hannyanggang.catchdoctor.entity.BoardImage;
 import hannyanggang.catchdoctor.entity.User;
+import hannyanggang.catchdoctor.repository.BoardImageRepository;
 import hannyanggang.catchdoctor.repository.BoardRepository;
+import hannyanggang.catchdoctor.util.ImageUtils;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class BoardService {
 
     private final BoardRepository boardRepository;
-
+    private final BoardImageRepository boardImageRepository;
     // 전체 게시물 조회
     @Transactional(readOnly = true)
     public List<BoardDto> getBoards() {
@@ -77,6 +84,31 @@ public class BoardService {
         // 게시글이 있는 경우 삭제처리
         boardRepository.deleteById(id);
 
+    }
+    // 이미지 업로드
+    public String uploadImage(MultipartFile file) throws IOException {
+        log.info("upload file: {}", file);
+        BoardImage boardImage = boardImageRepository.save(
+                BoardImage.builder()
+                        .name(file.getOriginalFilename())
+                        .type(file.getContentType())
+                        .boardImage(ImageUtils.compressImage(file.getBytes()))
+                        .build());
+        if (boardImage != null) {
+            log.info("imageData: {}", boardImage);
+            return "file uploaded successfully : " + file.getOriginalFilename();
+        }
+        return null;
+    }
+
+    // 이미지 파일로 압축하기
+    public byte[] downloadImage(String fileName) {
+        BoardImage boardImage = boardImageRepository.findByName(fileName)
+                .orElseThrow(RuntimeException::new);
+
+        log.info("download imageData: {}", boardImage);
+
+        return ImageUtils.decompressImage(boardImage.getBoardImage());
     }
 }
 

@@ -20,7 +20,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 @RequiredArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
@@ -33,7 +32,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         // Header의 Authorization 값이 비어있으면 => Jwt Token을 전송하지 않음 => 로그인 하지 않음
-        if(Objects.equals(authorizationHeader, "")) {
+        if(authorizationHeader == null) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        // 프론트에서 ""로 들어오는 경우에 대한처리
+        if(authorizationHeader == "") {
             filterChain.doFilter(request, response);
             return;
         }
