@@ -75,17 +75,19 @@ public class HospitalController {
         Map<String, Object> errorBody = new HashMap<>();
         try {
             if ((query == null || query.isEmpty()) && (department == null || department.isEmpty())) { //쿼리 입력값 없을 때 모든 결과 조회
-              //  hospitalDTOs = hospitalService.getAllHospitals(page, limit);
                 responseDTOs = openApiService.getAllHospitals(page, limit);
             } /*else if ((query != null && !Pattern.matches("^[가-힣\\s]+$", query)) || (department != null && !Pattern.matches("^[가-힣]+$", department))) {
                 throw new CustomValidationException(HttpStatus.BAD_REQUEST.value(), "잘못된 입력(한글만 입력)");
             }*/ else {
                 if (department != null && !department.isEmpty() && (query == null || query.isEmpty())) { //진료과목으로 검색
                     // department 파라미터에 대한 유효성 검사 (여기에서 유효성 검사 추가)
-                    if (!isValidDepartment(department)) {
-                        throw new CustomValidationException(HttpStatus.BAD_REQUEST.value(), "잘못된 입력");
+                    String[] departments = department.split(",");
+                    for (String dept : departments) {
+                        if (!isValidDepartment(dept.trim())) {
+                            throw new CustomValidationException(HttpStatus.BAD_REQUEST.value(), "잘못된 입력");
+                        }
                     }
-                    responseDTOs = openApiService.searchByDepartment(department, mapx, mapy, page, limit);
+                    responseDTOs = openApiService.searchByDepartment(departments, mapx, mapy, page, limit);
 
                 } else if (query != null && !query.isEmpty()) { //쿼리로 검색
                     responseDTOs = openApiService.searchHospitalsWithDetails(query, mapx, mapy, page, limit);

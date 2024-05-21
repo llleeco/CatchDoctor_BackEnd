@@ -14,6 +14,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -55,11 +57,14 @@ public class OpenApiService {
         }).sorted(Comparator.comparingDouble(SearchResponseDto::getDistance))
         .collect(Collectors.toList());
     }
-    public List<SearchResponseDto> searchByDepartment(String department, double MyMapX, double MyMapY, int page, int size) {
-        PageRequest pageRequest = PageRequest.of(page,size);
-        System.out.println("department = " + department);
+    public List<SearchResponseDto> searchByDepartment(String[] departments, double MyMapX, double MyMapY, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        System.out.println("departments = " + Arrays.toString(departments));
         // 동적 쿼리로 병원 검색
-        Page<OpenApiHospital> openApiHospitals = openApiRepository.searchByDepartment(department, pageRequest);
+        List<OpenApiHospital> openApiHospitals = new ArrayList<>();
+        for (String department : departments) {
+            openApiHospitals.addAll(openApiRepository.searchByDepartment(department, pageRequest).getContent());
+        }
         System.out.println("hospitals = " + openApiHospitals);
         // 병원 목록을 HospitalDTO 목록으로 변환
         return openApiHospitals.stream().map(openApiHospital -> {

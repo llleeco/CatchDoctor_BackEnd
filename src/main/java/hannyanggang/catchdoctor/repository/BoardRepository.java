@@ -4,5 +4,9 @@ package hannyanggang.catchdoctor.repository;
 import hannyanggang.catchdoctor.entity.Board;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface BoardRepository extends JpaRepository<Board, Integer> {
+import java.util.Optional;
+
+public interface BoardRepository extends JpaRepository<Board, Long> {
+    @Override
+    Optional<Board> findById(Long id);
 }

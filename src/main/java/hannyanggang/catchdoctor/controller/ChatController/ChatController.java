@@ -68,10 +68,4 @@ public class ChatController {
         // OpenAPI의 응답에서 첫 번째 선택지의 메시지를 가져와서 반환
         return chatGPTResponse.getChoices().get(0).getMessage().getContent();
     }
-//    @GetMapping("/chat")
-//    public String chat(@RequestParam(name = "prompt") String prompt) {
-//        ChatGPTRequestDto request = new ChatGPTRequestDto(model, prompt);
-//        ChatGPTResponseDto chatGPTResponse = template.postForObject(apiURL, request, ChatGPTResponseDto.class);
-//        return chatGPTResponse.getChoices().get(0).getMessage().getContent();
-//    }
 }

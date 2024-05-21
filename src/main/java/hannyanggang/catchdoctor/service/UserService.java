@@ -1,14 +1,19 @@
 package hannyanggang.catchdoctor.service;
 
+import hannyanggang.catchdoctor.dto.BoardLikeListDto;
 import hannyanggang.catchdoctor.dto.BookmarkListDto;
 import hannyanggang.catchdoctor.dto.LoginRequestDto;
 import hannyanggang.catchdoctor.dto.hospitalDto.HospitalFindAllResponseDto;
 import hannyanggang.catchdoctor.dto.hospitalDto.HospitalFindAllWithPagingResponseDto;
 import hannyanggang.catchdoctor.dto.hospitalDto.PageInfoDto;
 import hannyanggang.catchdoctor.dto.userDto.UserRegisterDto;
+import hannyanggang.catchdoctor.entity.Board;
+import hannyanggang.catchdoctor.entity.BoardLike;
 import hannyanggang.catchdoctor.entity.BookMark;
 import hannyanggang.catchdoctor.entity.Hospital;
 import hannyanggang.catchdoctor.entity.User;
+import hannyanggang.catchdoctor.repository.BoardLikeRepository;
+import hannyanggang.catchdoctor.repository.BoardRepository;
 import hannyanggang.catchdoctor.repository.BookMarkRepository;
 import hannyanggang.catchdoctor.repository.UserRepository;
 import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalRepository;
@@ -31,6 +36,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final BookMarkRepository bookMarkRepository;
     private final HospitalRepository hospitalRepository;
+    private final BoardRepository boardRepository;
+    private final BoardLikeRepository boardLikeRepository;
    // private final BCryptPasswordEncoder bCryptPasswordEncoder;
     public User register(UserRegisterDto registerDto) {
         User user = User.builder()
@@ -136,5 +143,42 @@ public class UserService {
 
         return HospitalFindAllWithPagingResponseDto.toDto(hospitalWithDto, new PageInfoDto(bookMarks));
 
+    }
+
+    public String updateBoardLike(Long id, User user){
+        Optional<Board> optionalBoard = boardRepository.findById(id);
+        if(optionalBoard.isPresent()) {
+            Board board = optionalBoard.get();
+            if(!hasBoardLike(board, user)){
+                return createBoardLike(board, user);
+            }
+            return removeBoardLike(board, user);
+        }
+        // 처리할 Board이 존재하지 않을 경우에 대한 로직
+        return "게시글을 찾을 수 없습니다.";
+    }
+    private boolean hasBoardLike(Board board, User user) {
+        return boardLikeRepository.findByBoardAndUser(board, user).isPresent();
+    }
+
+    private String createBoardLike(Board board, User user){
+        BoardLike boardLike = new BoardLike(board, user);
+        boardLikeRepository.save(boardLike);
+        return "이 게시글을 좋아합니다.";
+    }
+    private String removeBoardLike(Board board, User user){
+        Optional<BoardLike> boardLike = boardLikeRepository.findByBoardAndUser(board, user);
+        if (boardLike.isPresent()) {
+            boardLikeRepository.delete(boardLike.get());
+            return "이 게시글 좋아요를 취소합니다.";
+        } else {
+            // 즐겨찾기가 이미 존재하지 않는 경우에 대한 처리
+            return "게시글 좋아요가 되어있지 않습니다.";
+        }
+    }
+    public List<BoardLikeListDto> findBoardLikeAll(){
+        return boardLikeRepository.findAll().stream()
+                .map(BoardLikeListDto::new)
+                .collect(toList());
     }
 }

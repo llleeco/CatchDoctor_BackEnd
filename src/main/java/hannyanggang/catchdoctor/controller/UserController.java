@@ -39,6 +39,19 @@ public class UserController {
     public Response<?> findUser(@PathVariable("userid") Long userid) {
         return new Response<>("true", "조회 성공", userService.findUser(userid));
     }
+    // 게시물 좋아요 or 취소
+    @Operation(summary="게시글 좋아요/취소", description = "게시글을 좋아요/취소한다.")
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/boardlike/{boardid}")
+    public Response<?> boardLike(@PathVariable("boardid") Long boardid) {
+        return new Response<>("true", "좋아요 성공", userService.updateBoardLike(boardid, getPrincipal()));
+    }
+    @Operation(summary = "모든 좋아요 확인", description="모든 게시글 좋아요 요청")
+    @GetMapping("/boardlike/all")
+    @ResponseStatus(HttpStatus.OK)
+    public Response findBoardLikeAll(){
+        return new Response("true","리턴 성공",userService.findBoardLikeAll());
+    }
 
     //병원 즐겨찾기
     @Operation(summary = "병원 즐겨찾기", description="병원 즐겨찾기 등록")
@@ -51,7 +64,7 @@ public class UserController {
     @Operation(summary = "모든 즐겨찾기 요청", description="모든 즐겨찾기 요청하기")
     @GetMapping("/bookmarks/all")
     @ResponseStatus(HttpStatus.OK)
-    public Response findBookmarkAll(Integer page){
+    public Response findBookmarkAll(){
         return new Response("true","리턴 성공",userService.findBookmarkAll());
     }
 
@@ -63,9 +76,6 @@ public class UserController {
     }
     public User getPrincipal(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = userRepository.findByUserid(Long.parseLong(authentication.getName()));
-        String loginid = user.getId();
-        return userRepository.findByUserid(Long.parseLong(authentication.getName()));
-
+        return userRepository.findById((authentication.getName()));
     }
 }
