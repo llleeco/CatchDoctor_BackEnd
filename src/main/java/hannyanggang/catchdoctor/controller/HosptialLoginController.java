@@ -1,6 +1,7 @@
 package hannyanggang.catchdoctor.controller;
 
 import hannyanggang.catchdoctor.dto.LoginRequestDto;
+import hannyanggang.catchdoctor.dto.hospitalDto.HospitalLoginResponseDto;
 import hannyanggang.catchdoctor.dto.hospitalDto.HospitalRegisterDto;
 import hannyanggang.catchdoctor.dto.userDto.UserRegisterDto;
 import hannyanggang.catchdoctor.entity.Hospital;
@@ -38,13 +39,13 @@ public class HosptialLoginController {
 
     @Operation(summary = "병원 로그인", description="병원 로그인 진행")
     @PostMapping("/login")
-    public String login(@RequestBody LoginRequestDto loginRequest) {
+    public Response<HospitalLoginResponseDto> login(@RequestBody LoginRequestDto loginRequest) {
 
         Hospital hospital = hospitalService.login(loginRequest);
 
         // 로그인 아이디나 비밀번호가 틀린 경우 global error return
-        if(hospital == null) {
-            return"로그인 아이디 또는 비밀번호가 틀렸습니다.";
+        if (hospital == null) {
+            return new Response<>("false", "로그인 아이디 또는 비밀번호가 틀렸습니다.", null);
         }
 
         // 로그인 성공 => Jwt Token 발급
@@ -54,6 +55,10 @@ public class HosptialLoginController {
         //getUser_id-로그인 아이디
         String jwtToken = JwtTokenUtil.createToken(hospital.getId(), secretKey, expireTimeMs);
 
-        return jwtToken;
+        // 로그인 응답 DTO 생성
+        HospitalLoginResponseDto loginResponse = new HospitalLoginResponseDto(jwtToken, hospital.getHospitalid());
+
+        return new Response<>("true", "로그인 성공",
+                loginResponse);
     }
 }
