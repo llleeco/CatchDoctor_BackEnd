@@ -83,7 +83,7 @@ public class UserController {
     }
     @GetMapping("/tokencheck")
     public Response tokenCheck(){
-        return new Response("이게뭐지","아무것도안해",null);
+        return new Response("이게뭐지","아무것도안해","string");
     }
     public User getPrincipal(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
