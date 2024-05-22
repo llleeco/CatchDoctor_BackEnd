@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +39,8 @@ public class CommentService {
 
         comment.setUser(user);
         comment.setBoard(board);
+        comment.setRegDate(LocalDate.now());
+        comment.setRegTime(LocalTime.now());
         commentRepository.save(comment);
 
         return CommentDto.toDto(comment);

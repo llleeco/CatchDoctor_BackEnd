@@ -1,5 +1,6 @@
 package hannyanggang.catchdoctor.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -29,6 +30,13 @@ public class Comment {
     @Column(nullable = false)
     private String content;
 
+    @Column(updatable = false)
+    private LocalDate regDate;
+
+    @JsonFormat(pattern = "HH:mm")
+    @Column(updatable = false)
+    private LocalTime regTime;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @OnDelete(action = OnDeleteAction.CASCADE) // 연관된 user가 삭제되면 같이 삭제됨
@@ -38,4 +46,5 @@ public class Comment {
     @JoinColumn(name = "board_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Board board;
+
 }
