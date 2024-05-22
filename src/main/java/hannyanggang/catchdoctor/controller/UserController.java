@@ -81,6 +81,10 @@ public class UserController {
     public Response2 findFavoriteBoards(@RequestParam(defaultValue = "0") Integer page){
         return Response2.success(userService.findBookmarkHospitals(page, getPrincipal()));
     }
+    @GetMapping("/tokencheck")
+    public Response tokenCheck(){
+        return new Response("이게뭐지","아무것도안해",null);
+    }
     public User getPrincipal(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return userRepository.findById((authentication.getName()));
