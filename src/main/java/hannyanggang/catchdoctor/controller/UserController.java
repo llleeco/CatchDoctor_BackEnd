@@ -53,6 +53,13 @@ public class UserController {
         return new Response("true","리턴 성공",userService.findBoardLikeAll());
     }
 
+    @Operation(summary = "게시글 좋아요 확인", description="특정 게시글의 좋아요 요청")
+    @GetMapping("/boardlike/find/{boardid}")
+    @ResponseStatus(HttpStatus.OK)
+    public Response findBoardLike(@PathVariable Long boardid){
+        return new Response("true","리턴 성공",userService.findBoardLike(boardid));
+    }
+
     //병원 즐겨찾기
     @Operation(summary = "병원 즐겨찾기", description="병원 즐겨찾기 등록")
     @PostMapping("/bookmarks/{id}")

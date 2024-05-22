@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -180,5 +181,10 @@ public class UserService {
         return boardLikeRepository.findAll().stream()
                 .map(BoardLikeListDto::new)
                 .collect(toList());
+    }
+    public List<BoardLikeListDto> findBoardLike(Long boardid) {
+        return boardLikeRepository.findByBoardId(boardid).stream()
+                .map(BoardLikeListDto::new)
+                .collect(Collectors.toList());
     }
 }
