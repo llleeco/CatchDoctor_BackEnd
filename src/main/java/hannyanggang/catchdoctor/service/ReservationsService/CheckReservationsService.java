@@ -32,11 +32,7 @@ public class CheckReservationsService {
             List<ReservationCheckDto> appointmentDTOs = new ArrayList<>();
 
             for (Reservations reservation : reservations) {
-                Hospital hospital = reservation.getHospital();
-                User user = reservation.getUser();
-                Review review = reviewRepository.findByHospitalAndUser(hospital, user);
-                boolean reviewWrite = review != null;
-
+                boolean reviewWrite = reservation.isReviewWrite();
                 ReservationCheckDto dto = new ReservationCheckDto(
                         reservation.getReservationId(),
                         reservation.getReservationDate(),

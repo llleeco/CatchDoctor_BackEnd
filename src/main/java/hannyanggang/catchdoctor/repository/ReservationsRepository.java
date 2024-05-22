@@ -2,6 +2,7 @@ package hannyanggang.catchdoctor.repository;
 
 import hannyanggang.catchdoctor.entity.Hospital;
 import hannyanggang.catchdoctor.entity.Reservations;
+import hannyanggang.catchdoctor.entity.User;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.QueryHint;
 import org.springframework.data.jpa.repository.*;
@@ -60,4 +61,8 @@ public interface ReservationsRepository extends JpaRepository<Reservations, Stri
     Optional<Reservations> findByUser_IdAndReservationId(@Param("reservationId") Long reservationId, @Param("id") String id);
 
     Reservations findByHospitalAndReservationDateAndReservationTime(Hospital hospital, LocalDate date, LocalTime time);
+
+    Reservations findByHospitalAndUser(Hospital hospital, User user);
+
+    Reservations findByReservationId(Long id);
 }

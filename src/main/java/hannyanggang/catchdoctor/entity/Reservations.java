@@ -52,6 +52,8 @@ public class Reservations {
     @JoinColumn(name="hospitalid", nullable = false)
     private Hospital hospital;
 
+    private boolean reviewWrite;
+
     public void setUserId(String userId, UserRepository patientRepository) {
         User patient = patientRepository.findById(userId);
         if (patient != null) {

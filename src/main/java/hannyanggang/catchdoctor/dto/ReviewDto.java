@@ -21,6 +21,8 @@ public class ReviewDto {
 
     private Long user_id;
 
+    private Long reservation_id;
+
     private String username;
 
     private float grade;

@@ -105,6 +105,7 @@ public class ReservationsService {
         reservations.setReservationTime(appointmentsDTO.getReservationTime());
         reservations.setHospitalId(appointmentsDTO.getHospitalid(), hospitalRepository);
         reservations.setStatus("예약신청");
+        reservations.setReviewWrite(false);
 
         return reservations;
     }
