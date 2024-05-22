@@ -20,4 +20,6 @@ public interface ReviewRepository extends JpaRepository<Review,Long> {
     @Modifying //insert,update,delete 쿼리에서 벌크 연산시 사용한다
     @Query("delete from Review hr where hr.user = :user")
     void deleteByMember(@Param("user") User user);
+
+    Review findByHospitalAndUser(Hospital hospital,User user);
 }

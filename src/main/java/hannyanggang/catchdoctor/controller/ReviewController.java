@@ -60,7 +60,7 @@ public class ReviewController {
 
     private User getPrincipal(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return userRepository.findByUserid(Long.parseLong(authentication.getName()));
+        return userRepository.findById(authentication.getName());
     }
 }
 

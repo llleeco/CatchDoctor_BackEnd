@@ -58,7 +58,6 @@ public class SearchReservationsService {
                         reservation.getHospital().getHospitalid(),
                         reservation.getHospital().getName(),
                         reservation.getUser().getName()
-
                 );
                 appointmentDTOs.add(dto);
             }

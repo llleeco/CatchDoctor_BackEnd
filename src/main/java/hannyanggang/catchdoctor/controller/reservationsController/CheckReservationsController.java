@@ -1,5 +1,6 @@
 package hannyanggang.catchdoctor.controller.reservationsController;
 
+import hannyanggang.catchdoctor.dto.reservationsDTO.ReservationCheckDto;
 import hannyanggang.catchdoctor.dto.reservationsDTO.ReservationsDTO;
 import hannyanggang.catchdoctor.exception.CustomValidationException;
 import hannyanggang.catchdoctor.service.ReservationsService.CheckReservationsService;
@@ -34,7 +35,7 @@ public class CheckReservationsController {
             if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken) && authentication.isAuthenticated()) {
                 // 인증된 사용자의 정보를 활용
                 String userId = authentication.getName();
-                List<ReservationsDTO> appointmentsDTOS =checkReservationsService.getReservationsByUserId(userId);
+                List<ReservationCheckDto> appointmentsDTOS =checkReservationsService.getReservationsByUserId(userId);
                 return ResponseEntity.ok(appointmentsDTOS);
             } else {
                 throw new CustomValidationException(HttpStatus.UNAUTHORIZED.value(), "유효하지 않은 토큰");
