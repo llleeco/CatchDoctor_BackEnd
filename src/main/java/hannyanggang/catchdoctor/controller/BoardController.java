@@ -94,7 +94,7 @@ public class BoardController {
     }
 
     // 다운로드
-    @GetMapping("/boards/{fileName}")
+    @GetMapping("/boards/download/{fileName}")
     public ResponseEntity<?> downloadImage(@PathVariable("fileName") String fileName) {
         byte[] downloadImage = boardService.downloadImage(fileName);
         return ResponseEntity.status(HttpStatus.OK)
