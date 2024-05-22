@@ -1,5 +1,6 @@
 package hannyanggang.catchdoctor.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -37,6 +38,7 @@ public class Board {
     @Column(updatable = false)
     private LocalDate regDate;
 
+    @JsonFormat(pattern = "HH:mm")
     @Column(updatable = false)
     private LocalTime regTime;
 }

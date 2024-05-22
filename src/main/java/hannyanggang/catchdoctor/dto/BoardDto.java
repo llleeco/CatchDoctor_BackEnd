@@ -1,5 +1,6 @@
 package hannyanggang.catchdoctor.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import hannyanggang.catchdoctor.entity.Board;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,6 +17,7 @@ public class BoardDto {
     private String content;
     private String writer;
     private LocalDate regDate;
+    @JsonFormat(pattern = "HH:mm")
     private LocalTime regTime;
 
     public static BoardDto toDto(Board board) {
