@@ -59,7 +59,10 @@ public class ReviewService {
         }
     }
 
-    public void remove(Long reviewnum) {
+    public void remove(Long reviewnum,Long reservationid) {
+        Reservations reservations = reservationsRepository.findByReservationId(reservationid);
+        reservations.setReviewWrite(false);
+        reservationsRepository.save(reservations);
         reviewRepository.deleteById(reviewnum);
     }
 

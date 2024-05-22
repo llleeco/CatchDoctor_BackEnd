@@ -67,6 +67,8 @@ public class BoardService {
 
         board.setTitle(boardDto.getTitle());
         board.setContent(boardDto.getContent());
+        board.setRegDate(LocalDate.now());
+        board.setRegTime(LocalTime.now());
 
         return board;
     }

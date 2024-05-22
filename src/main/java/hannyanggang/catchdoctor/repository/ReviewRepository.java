@@ -22,4 +22,5 @@ public interface ReviewRepository extends JpaRepository<Review,Long> {
     void deleteByMember(@Param("user") User user);
 
     Review findByHospitalAndUser(Hospital hospital,User user);
+
 }
