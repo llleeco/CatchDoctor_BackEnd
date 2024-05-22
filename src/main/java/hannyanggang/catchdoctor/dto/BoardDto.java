@@ -13,6 +13,7 @@ import java.time.LocalTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardDto {
+    private Long boardId;
     private String title;
     private String content;
     private String writer;
@@ -22,6 +23,7 @@ public class BoardDto {
 
     public static BoardDto toDto(Board board) {
         return new BoardDto(
+                board.getId(),
                 board.getTitle(),
                 board.getContent(),
                 board.getUser().getName(),
