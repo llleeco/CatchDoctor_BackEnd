@@ -42,9 +42,6 @@ public class Hospital {
     @Column(nullable = false)
     private String name;
 
-//    @Column(nullable = false)
-//    private String addnum;
-
     private UserRole role; // USER
 
     @OneToOne(cascade = CascadeType.ALL)

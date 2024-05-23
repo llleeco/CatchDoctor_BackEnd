@@ -3,6 +3,7 @@ package hannyanggang.catchdoctor.controller;
 import hannyanggang.catchdoctor.entity.OpenApiHospital;
 import hannyanggang.catchdoctor.repository.hospitalRepository.OpenApiRepository;
 import hannyanggang.catchdoctor.response.Response;
+import hannyanggang.catchdoctor.service.hospitalService.OpenApiService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.json.simple.JSONArray;
@@ -21,6 +22,7 @@ import java.net.URL;
 public class OpenApiController {
 
     private final OpenApiRepository openApiRepository;
+    private final OpenApiService openApiService;
 
     @Operation(summary = "병원 OPENAPI 저장", description="OPENAPI에서 병원데이터 DB에 저장하기")
     @GetMapping("/api")
@@ -100,7 +102,7 @@ public class OpenApiController {
     @GetMapping("/api/hospitals")
     @ResponseStatus(HttpStatus.OK)
     public Response<?> findAllHospital() {
-        return new Response<>("true", "조회 성공", openApiRepository.findAll());
+        return new Response<>("true", "조회 성공", openApiService.findAll());
     }
 
 

@@ -1,5 +1,6 @@
 package hannyanggang.catchdoctor.service.hospitalService;
 
+import hannyanggang.catchdoctor.dto.hospitalDto.OpenApiHospitalDto;
 import hannyanggang.catchdoctor.dto.hospitalDto.SearchResponseDto;
 import hannyanggang.catchdoctor.entity.Hospital;
 import hannyanggang.catchdoctor.entity.OpenApiHospital;
@@ -135,4 +136,10 @@ public class OpenApiService {
         return hospitalname.equals(hospitalname);
     }
 
+    public List<OpenApiHospitalDto> findAll() {
+        List<OpenApiHospital> openApiHospitals = openApiRepository.findAll();
+        return openApiHospitals.stream()
+                .map(OpenApiHospitalDto::new)
+                .collect(Collectors.toList());
+    }
 }
