@@ -187,4 +187,20 @@ public class UserService {
                 .map(BoardLikeListDto::new)
                 .collect(Collectors.toList());
     }
+    public boolean findBoardLikeUser(Long boardId, String Id){
+        User user = userRepository.findById(Id);
+        Optional<Board> optionalBoard = boardRepository.findById(boardId);
+        if (!optionalBoard.isPresent()) {
+            throw new ResourceNotFoundException("게시글을 찾을 수 없습니다. 게시글Id : " + boardId);
+        }
+        Board board = optionalBoard.get();
+        Optional<BoardLike> optionalBoardLike = boardLikeRepository.findByBoardAndUser(board,user);
+        return optionalBoardLike.isPresent();
+    }
+    public class ResourceNotFoundException extends RuntimeException {
+        public ResourceNotFoundException(String message) {
+            super(message);
+        }
+    }
+
 }

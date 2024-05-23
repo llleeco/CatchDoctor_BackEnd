@@ -1,11 +1,14 @@
 package hannyanggang.catchdoctor.controller.hospitalController;
 
 import hannyanggang.catchdoctor.dto.hospitalDto.SearchResponseDto;
+import hannyanggang.catchdoctor.entity.Hospital;
+import hannyanggang.catchdoctor.entity.HospitalDetail;
 import hannyanggang.catchdoctor.entity.User;
 import hannyanggang.catchdoctor.dto.hospitalDto.HospitalDetailDto;
 import hannyanggang.catchdoctor.dto.hospitalDto.HospitalSetDto;
 import hannyanggang.catchdoctor.exception.CustomValidationException;
 import hannyanggang.catchdoctor.repository.UserRepository;
+import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalDetailRepository;
 import hannyanggang.catchdoctor.response.Response;
 import hannyanggang.catchdoctor.response.Response2;
 import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalRepository;
@@ -14,6 +17,8 @@ import hannyanggang.catchdoctor.service.hospitalService.HospitalService;
 import hannyanggang.catchdoctor.dto.hospitalDto.HospitalDTO;
 import hannyanggang.catchdoctor.service.hospitalService.OpenApiService;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -32,26 +37,22 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-
-@Controller
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/hospitals")
 public class HospitalController {
     private final HospitalService hospitalService;
     private final HospitalDetailService hospitalDetailService;
     private final OpenApiService openApiService;
-    private final UserRepository userRepository;
+    private final HospitalDetailRepository hospitalDetailRepository;
+    private final HospitalRepository hospitalRepository;
 
     //진료과목 리스트
     private static final List<String> VALID_DEPARTMENTS = Arrays.asList("소아청소년과", "내과", "이비인후과", "정형외과", "안과", "산부인과", "신경외과", "피부과", "정신건강의학과");
 
-    public HospitalController(HospitalService hospitalService, OpenApiService openApiService, UserRepository userRepository, HospitalRepository hospitalRepository, HospitalDetailService hospitalDetailService, OpenApiService openApiService1, UserRepository userRepository1) {
-        this.hospitalService = hospitalService;
-        this.hospitalDetailService = hospitalDetailService;
-        this.openApiService = openApiService1;
-        this.userRepository = userRepository1;
-    }
+
 
     @Operation(summary = "특정 병원 정보", description = "특정 병원 정보요청하기")
     @GetMapping("/findhospital/{hospitalid}")
@@ -123,9 +124,22 @@ public class HospitalController {
     // 병원 detaill 작성
     @Operation(summary = "병원 상세정보", description="병원 상세정보 입력")
     @PostMapping("/hospitaldetail")
-    public Response hospitaldetail(Authentication authentication, @RequestBody HospitalDetailDto hospitalDetailDto) {
+    public Response hospitalDetail(Authentication authentication, @RequestBody HospitalDetailDto hospitalDetailDto) {
         String Id = authentication.getName();
-        return new Response("입력완료", "병원 정보 입력완료", hospitalDetailService.hospitalMyPage(hospitalDetailDto, Id));
+        return new Response("입력", "병원 정보 입력", hospitalDetailService.hospitalMyPage(hospitalDetailDto, Id));
+    }
+
+    @Operation(summary = "병원 상세정보 수정", description="병원 상세정보 수정")
+    @PostMapping("/hospitaldetail/modify/{detail_id}")
+    public Response hospitalDetailModfiy(Authentication authentication, @RequestBody HospitalDetailDto hospitalDetailDto,@PathVariable Long detail_id) {
+        String Id = authentication.getName();
+        Hospital hospital = hospitalRepository.findById(Id);
+        HospitalDetail hospitalDetail = hospitalDetailRepository.findByHospital(hospital);
+        // 병원 상세 정보의 ID가 URL의 ID와 일치하는지 확인
+        if (!hospitalDetail.getId().equals(detail_id)) {
+            throw new BadRequestException("Detail ID mismatch");
+        }
+        return new Response("수정", "병원 정보 수정", hospitalDetailService.modifyHospitalMyPage(hospitalDetailDto, detail_id));
     }
 
     // 병원 detail 찾기
@@ -144,8 +158,16 @@ public class HospitalController {
         return new Response("완료", "병원 등록 완료", hospitalService.connectOpenApi(hospitalId,addnum));
     }
 
+    @Operation(summary = "병원 이름 확인", description="등록되어 있는 병원인지 확인")
     @GetMapping("/checkhospital/{hospitalname}")
     public Response checkhospital(@PathVariable String hospitalname){
-        return new Response("성공", "등록된 병원이름 확인", openApiService.checkhospital(hospitalname));
+        return new Response("확인", "등록된 병원이름 확인", openApiService.checkhospital(hospitalname));
+    }
+
+
+    public class BadRequestException extends RuntimeException {
+        public BadRequestException(String message) {
+            super(message);
+        }
     }
 }

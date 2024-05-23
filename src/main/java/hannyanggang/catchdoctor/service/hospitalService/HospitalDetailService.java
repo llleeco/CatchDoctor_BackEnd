@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -52,4 +53,31 @@ public class HospitalDetailService {
 
         return hospitalDetail;
     }
+    public HospitalDetail modifyHospitalMyPage (HospitalDetailDto hospitalDetailsDto, Long detail_id) {
+        Optional<HospitalDetail> optionalHospitalDetail = hospitalDetailRepository.findById(detail_id);
+        HospitalDetail hospitalDetail = optionalHospitalDetail.get();
+        hospitalDetail.setHospitalInfo(hospitalDetailsDto.getHospitalInfo());
+        hospitalDetail.setDepartment(hospitalDetailsDto.getDepartment());
+        hospitalDetail.setDoctorInfo(hospitalDetailsDto.getDoctorInfo());
+        hospitalDetail.setMon_open(hospitalDetailsDto.getMon_open());
+        hospitalDetail.setMon_close(hospitalDetailsDto.getMon_close());
+        hospitalDetail.setTue_open(hospitalDetailsDto.getTue_open());
+        hospitalDetail.setTue_close(hospitalDetailsDto.getTue_close());
+        hospitalDetail.setWed_open(hospitalDetailsDto.getWed_open());
+        hospitalDetail.setWed_close(hospitalDetailsDto.getWed_close());
+        hospitalDetail.setThu_open(hospitalDetailsDto.getThu_open());
+        hospitalDetail.setThu_close(hospitalDetailsDto.getThu_close());
+        hospitalDetail.setFri_open(hospitalDetailsDto.getFri_open());
+        hospitalDetail.setFri_close(hospitalDetailsDto.getFri_close());
+        hospitalDetail.setSat_open(hospitalDetailsDto.getSat_open());
+        hospitalDetail.setSat_close(hospitalDetailsDto.getSat_close());
+        hospitalDetail.setSun_open(hospitalDetailsDto.getSun_open());
+        hospitalDetail.setSun_close(hospitalDetailsDto.getSun_close());
+        hospitalDetail.setHol_open(hospitalDetailsDto.getHol_open());
+        hospitalDetail.setHol_close(hospitalDetailsDto.getHol_close());
+        hospitalDetail.setLunch_start(hospitalDetailsDto.getLunch_start());
+        hospitalDetail.setLunch_end(hospitalDetailsDto.getLunch_end());
+
+        return hospitalDetailRepository.save(hospitalDetail);
+        }
 }

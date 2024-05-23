@@ -77,6 +77,7 @@ public class ReviewService {
                     .user(user)
                     .grade(hospitalReviewDTO.getGrade())
                     .text(hospitalReviewDTO.getText())
+                    .reservationId(hospitalReviewDTO.getReservation_id())
                     .build();
             return hospitalReview;
         } else {
@@ -88,6 +89,7 @@ public class ReviewService {
         ReviewDto hospitalReviewDTO = ReviewDto.builder()
                 .review_id(hospitalReview.getId())
                 .hospital_id(hospitalReview.getHospital().getHospitalid())
+                .reservation_id(hospitalReview.getReservationId())
                 .user_id(hospitalReview.getUser().getUserid())
                 .username(hospitalReview.getUser().getName())
                 .grade(hospitalReview.getGrade())

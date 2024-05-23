@@ -37,6 +37,8 @@ public class Review {
 
     private String text;
 
+    private Long reservationId;
+
     @Column(updatable = false)
     private LocalDate regDate;
 

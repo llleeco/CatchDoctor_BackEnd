@@ -57,7 +57,14 @@ public class UserController {
     @GetMapping("/boardlike/find/{boardid}")
     @ResponseStatus(HttpStatus.OK)
     public Response findBoardLike(@PathVariable Long boardid){
-        return new Response("true","리턴 성공",userService.findBoardLike(boardid));
+        return new Response("요청","유저의 게시글 좋아요 요청",userService.findBoardLike(boardid));
+    }
+    @Operation(summary = "유저의 게시글 좋아요 확인", description="특정 유저의 게시글의 좋아요 요청")
+    @GetMapping("/boardlike/find/user/{boardId}")
+    @ResponseStatus(HttpStatus.OK)
+    public Response findBoardLike(Authentication authentication, @PathVariable Long boardId){
+        String userId = authentication.getName();
+        return new Response("true","리턴 성공",userService.findBoardLikeUser(boardId, userId));
     }
 
     //병원 즐겨찾기
