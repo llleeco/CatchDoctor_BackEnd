@@ -10,6 +10,7 @@ public class OpenApiHospitalDto {
     private String hospitalname;
     private String tel;
     private String addnum;
+    private String address;
     private Double mapX;
     private Double mapY;
     private Long hospitalId;
@@ -19,6 +20,7 @@ public class OpenApiHospitalDto {
         this.hospitalname = openApiHospital.getHospitalname();
         this.tel = openApiHospital.getTel();
         this.addnum = openApiHospital.getAddnum();
+        this.address = openApiHospital.getAddress();
         this.mapX = openApiHospital.getMapX();
         this.mapY = openApiHospital.getMapY();
         this.hospitalId = openApiHospital.getHospital() != null ? openApiHospital.getHospital().getHospitalid() : null;
