@@ -5,6 +5,7 @@ import hannyanggang.catchdoctor.dto.hospitalDto.SearchResponseDto;
 import hannyanggang.catchdoctor.entity.Hospital;
 import hannyanggang.catchdoctor.entity.OpenApiHospital;
 import hannyanggang.catchdoctor.entity.Reservations;
+import hannyanggang.catchdoctor.exception.CustomValidationException;
 import hannyanggang.catchdoctor.repository.hospitalRepository.OpenApiRepository;
 import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalRepository;
 import hannyanggang.catchdoctor.response.Response;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -41,8 +43,14 @@ public class OpenApiService {
         System.out.println("hospitals = " + openApiHospitals);
         // 병원 목록을 HospitalDTO 목록으로 변환
         return openApiHospitals.stream().map(openApiHospital -> {
-            double hospitalLatitude = openApiHospital.getMapY();
-            double hospitalLongitude = openApiHospital.getMapX();
+            Double hospitalLatitude = openApiHospital.getMapY();
+            Double hospitalLongitude = openApiHospital.getMapX();
+                    // Null 값 예외 처리
+                    if (hospitalLatitude == null || hospitalLongitude == null) {
+                        hospitalLatitude = 0.0;
+                        hospitalLongitude = 0.0;
+//                        throw new CustomValidationException(HttpStatus.BAD_REQUEST.value(), "위치 정보가 없는 병원이 있습니다.");
+                    }
 
             double distance = calculateDistance(MyMapX, MyMapY, hospitalLatitude, hospitalLongitude);
 

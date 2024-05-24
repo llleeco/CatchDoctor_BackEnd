@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -87,10 +88,10 @@ public class BoardController {
     }
     // 업로드
     @PostMapping("/boards/upload")
-    public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file) throws IOException {
-        String uploadImage = boardService.uploadImage(file);
+    public ResponseEntity<?> uploadImages(@RequestParam("image") MultipartFile[] files) throws IOException {
+        List<String> uploadedFiles = boardService.uploadImages(files);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(uploadImage);
+                .body(uploadedFiles);
     }
 
     // 다운로드

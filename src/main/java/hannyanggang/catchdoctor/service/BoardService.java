@@ -17,7 +17,10 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -88,19 +91,29 @@ public class BoardService {
 
     }
     // 이미지 업로드
-    public String uploadImage(MultipartFile file) throws IOException {
-        log.info("upload file: {}", file);
-        BoardImage boardImage = boardImageRepository.save(
-                BoardImage.builder()
-                        .name(file.getOriginalFilename())
-                        .type(file.getContentType())
-                        .boardImage(ImageUtils.compressImage(file.getBytes()))
-                        .build());
-        if (boardImage != null) {
-            log.info("imageData: {}", boardImage);
-            return "file uploaded successfully : " + file.getOriginalFilename();
+    public List<String> uploadImages(MultipartFile[] files) throws IOException {
+        List<String> uploadedFiles = new ArrayList<>();
+        Set<String> fileNames = new HashSet<>();
+        for (MultipartFile file : files) {
+            String fileName = file.getOriginalFilename();
+            Optional<BoardImage> optionalBoardImage = boardImageRepository.findByName(fileName);
+            if (optionalBoardImage.isPresent()) {
+                uploadedFiles.add("Error: 중복된 제목이 있습니다. 파일제목: " + fileName);
+                continue; // 중복 파일 이름이 있으면 다음 파일로 넘어감
+            }
+            log.info("upload file: {}", file);
+            BoardImage boardImage = boardImageRepository.save(
+                    BoardImage.builder()
+                            .name(file.getOriginalFilename())
+                            .type(file.getContentType())
+                            .boardImage(ImageUtils.compressImage(file.getBytes()))
+                            .build());
+            if (boardImage != null) {
+                log.info("imageData: {}", boardImage);
+                uploadedFiles.add("file uploaded successfully : " + file.getOriginalFilename());
+            }
         }
-        return null;
+        return uploadedFiles;
     }
 
     // 이미지 파일로 압축하기
