@@ -134,7 +134,8 @@ public class HospitalController {
 
     @Operation(summary = "병원 상세정보 수정", description="병원 상세정보 수정")
     @PostMapping("/hospitaldetail/modify/{detail_id}")
-    public Response hospitalDetailModfiy(Authentication authentication, @RequestBody HospitalDetailDto hospitalDetailDto,@PathVariable Long detail_id) {
+    public Response hospitalDetailModfiy(Authentication authentication, @RequestPart("hospitalDetailDto") HospitalDetailDto hospitalDetailDto
+            , @RequestPart("image") MultipartFile[] files, @PathVariable Long detail_id) throws IOException {
         String Id = authentication.getName();
         Hospital hospital = hospitalRepository.findById(Id);
         HospitalDetail hospitalDetail = hospitalDetailRepository.findByHospital(hospital);
@@ -142,7 +143,7 @@ public class HospitalController {
         if (!hospitalDetail.getId().equals(detail_id)) {
             throw new BadRequestException("Detail ID mismatch");
         }
-        return new Response("수정", "병원 정보 수정", hospitalDetailService.modifyHospitalMyPage(hospitalDetailDto, detail_id));
+        return new Response("수정", "병원 정보 수정", hospitalDetailService.modifyHospitalMyPage(hospitalDetailDto, detail_id, files));
     }
 
     // 병원 detail 찾기
@@ -165,6 +166,16 @@ public class HospitalController {
     @GetMapping("/checkhospital/{hospitalname}")
     public Response checkhospital(@PathVariable String hospitalname){
         return new Response("확인", "등록된 병원이름 확인", openApiService.checkhospital(hospitalname));
+    }
+    // 다운로드
+    @GetMapping("/download/{detailId}")
+    public ResponseEntity<?> downloadImage(@PathVariable("detailId") Long detailId) {
+        List<byte[]> downloadImage = hospitalDetailService.downloadImagesBoard(detailId);
+//        byte[] imageData = downloadImage.get(0);
+//        return ResponseEntity.ok()
+//                .contentType(MediaType.IMAGE_PNG)
+//                .body(imageData);
+        return ResponseEntity.ok(downloadImage);
     }
 
 

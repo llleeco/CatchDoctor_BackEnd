@@ -96,7 +96,6 @@ public class HospitalDetail {
     private String lunch_end;
 
     @Lob
-    @JsonIgnore
     @Column(name = "boardimage1")
     private byte[] boardImage1;
 

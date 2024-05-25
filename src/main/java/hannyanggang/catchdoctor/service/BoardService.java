@@ -85,13 +85,43 @@ public class BoardService {
 
     // 게시물 수정
     @Transactional
-    public Board update(Long id, BoardDto boardDto) {
+    public Board update(Long id, BoardDto boardDto, MultipartFile[] files) throws IOException {
         Board board = boardRepository.findById(id).orElseThrow(() -> {
             return new IllegalArgumentException("Board Id를 찾을 수 없습니다!");
         });
 
         board.setTitle(boardDto.getTitle());
         board.setContent(boardDto.getContent());
+        if (files != null) {
+            board.setBoardImage1(null);
+            board.setBoardImage2(null);
+            board.setBoardImage3(null);
+            board.setBoardImage4(null);
+            board.setBoardImage5(null);
+            for (int i = 0; i < files.length && i < 5; i++) {
+                byte[] compressedImage = null;
+                if (files[i] != null) {
+                    compressedImage = ImageUtils.compressImage(files[i].getBytes());
+                }
+                switch (i) {
+                    case 0:
+                        board.setBoardImage1(compressedImage);
+                        break;
+                    case 1:
+                        board.setBoardImage2(compressedImage);
+                        break;
+                    case 2:
+                        board.setBoardImage3(compressedImage);
+                        break;
+                    case 3:
+                        board.setBoardImage4(compressedImage);
+                        break;
+                    case 4:
+                        board.setBoardImage5(compressedImage);
+                        break;
+                }
+            }
+        }
         board.setRegDate(LocalDate.now());
         board.setRegTime(LocalTime.now());
 
@@ -139,7 +169,7 @@ public class BoardService {
     }
 
     // 이미지 파일로 압축하기
-    public List<byte[]> downloadImages(Long boardId) {
+    public List<byte[]> downloadImagesBoard(Long boardId) {
         Optional<Board> optionalBoard = boardRepository.findById(boardId);
         Board board = optionalBoard.orElseThrow(() -> new IllegalArgumentException("게시글을 찾을 수 없습니다. 게시글ID : " + boardId));
 

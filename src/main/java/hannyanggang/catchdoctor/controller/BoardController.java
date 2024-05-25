@@ -63,12 +63,13 @@ public class BoardController {
     @Operation(summary = "게시글 수정", description = "게시글을 수정한다.")
     @ResponseStatus(HttpStatus.OK)
     @PutMapping("/boards/update/{id}")
-    public Response edit(@RequestBody BoardDto boardDto, @PathVariable("id") Long id, Authentication authentication) {
+    public Response edit(@RequestPart("boardDto") BoardDto boardDto, @PathVariable("id") Long id,
+                         Authentication authentication, @RequestPart("image") MultipartFile[] files) throws IOException {
         String userId = authentication.getName();
         User user = userRepository.findById(userId);
         if (user.getName().equals(boardService.getBoard(id).getWriter())) {
             // 로그인된 유저의 글이 맞다면
-            return new Response("성공", "글 수정 성공", boardService.update(id, boardDto));
+            return new Response("성공", "글 수정 성공", boardService.update(id, boardDto,files));
         } else {
             return new Response("실패", "본인 게시물만 수정할 수 있습니다.", null);
 
@@ -100,7 +101,7 @@ public class BoardController {
     // 다운로드
     @GetMapping("/boards/download/{boardId}")
     public ResponseEntity<?> downloadImage(@PathVariable("boardId") Long boardId) {
-        List<byte[]> downloadImage = boardService.downloadImages(boardId);
+        List<byte[]> downloadImage = boardService.downloadImagesBoard(boardId);
 //        byte[] imageData = downloadImage.get(0);
 //        return ResponseEntity.ok()
 //                .contentType(MediaType.IMAGE_PNG)
