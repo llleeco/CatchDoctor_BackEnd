@@ -33,7 +33,6 @@ public class BoardController {
 
     private final BoardService boardService;
     private final UserRepository userRepository;
-    private final ObjectMapper objectMapper;
 
     // 전체 게시글 조회
     @Operation(summary = "전체 게시글 보기", description = "전체 게시글을 조회한다.")
@@ -90,15 +89,8 @@ public class BoardController {
             return new Response("실패", "본인 게시물만 삭제할 수 있습니다.", null);
         }
     }
-    // 업로드
-    @PostMapping("/boards/upload")
-    public ResponseEntity<?> uploadImages(@RequestParam("image") MultipartFile[] files) throws IOException {
-        List<String> uploadedFiles = boardService.uploadImages(files);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(uploadedFiles);
-    }
-
     // 다운로드
+    @Operation(summary = "게시글 이미지 요청", description = "게시글의 이미지를 리턴한다.")
     @GetMapping("/boards/download/{boardId}")
     public ResponseEntity<?> downloadImage(@PathVariable("boardId") Long boardId) {
         List<byte[]> downloadImage = boardService.downloadImagesBoard(boardId);

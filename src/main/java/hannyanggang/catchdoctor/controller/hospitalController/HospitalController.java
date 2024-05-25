@@ -168,6 +168,7 @@ public class HospitalController {
         return new Response("확인", "등록된 병원이름 확인", openApiService.checkhospital(hospitalname));
     }
     // 다운로드
+    @Operation(summary = "병원 이미지 요청", description="등록한 병원 이미지 리턴")
     @GetMapping("/download/{detailId}")
     public ResponseEntity<?> downloadImage(@PathVariable("detailId") Long detailId) {
         List<byte[]> downloadImage = hospitalDetailService.downloadImagesBoard(detailId);
