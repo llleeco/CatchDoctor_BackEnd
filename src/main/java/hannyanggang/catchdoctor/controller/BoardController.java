@@ -1,5 +1,6 @@
 package hannyanggang.catchdoctor.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hannyanggang.catchdoctor.dto.BoardDto;
 import hannyanggang.catchdoctor.entity.User;
 import hannyanggang.catchdoctor.repository.UserRepository;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,7 +33,7 @@ public class BoardController {
 
     private final BoardService boardService;
     private final UserRepository userRepository;
-
+    private final ObjectMapper objectMapper;
 
     // 전체 게시글 조회
     @Operation(summary = "전체 게시글 보기", description = "전체 게시글을 조회한다.")
@@ -51,10 +53,11 @@ public class BoardController {
     @Operation(summary = "게시글 작성", description = "게시글을 작성한다.")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/boards/write")
-    public Response write(@RequestBody BoardDto boardDto, Authentication authentication) {
+    public Response write(@RequestPart("boardDto") BoardDto boardDto, Authentication authentication,
+                          @RequestPart("image") MultipartFile[] files) throws IOException {
         String userId = authentication.getName();
         User user = userRepository.findById(userId);
-        return new Response("성공", "글 작성 성공", boardService.write(boardDto, user));
+        return new Response("성공", "글 작성 성공", boardService.write(boardDto, user, files));
     }
     // 게시글 수정
     @Operation(summary = "게시글 수정", description = "게시글을 수정한다.")
@@ -95,12 +98,14 @@ public class BoardController {
     }
 
     // 다운로드
-    @GetMapping("/boards/download/{fileName}")
-    public ResponseEntity<?> downloadImage(@PathVariable("fileName") String fileName) {
-        byte[] downloadImage = boardService.downloadImage(fileName);
-        return ResponseEntity.status(HttpStatus.OK)
-                .contentType(MediaType.valueOf("image/png"))
-                .body(downloadImage);
+    @GetMapping("/boards/download/{boardId}")
+    public ResponseEntity<?> downloadImage(@PathVariable("boardId") Long boardId) {
+        List<byte[]> downloadImage = boardService.downloadImages(boardId);
+//        byte[] imageData = downloadImage.get(0);
+//        return ResponseEntity.ok()
+//                .contentType(MediaType.IMAGE_PNG)
+//                .body(imageData);
+        return ResponseEntity.ok(downloadImage);
     }
 }
 

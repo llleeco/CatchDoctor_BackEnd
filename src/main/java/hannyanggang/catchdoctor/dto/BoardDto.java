@@ -2,6 +2,7 @@ package hannyanggang.catchdoctor.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import hannyanggang.catchdoctor.entity.Board;
+import hannyanggang.catchdoctor.util.ImageUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,8 +19,9 @@ public class BoardDto {
     private String content;
     private String writer;
     private LocalDate regDate;
-    @JsonFormat(pattern = "HH:mm")
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime regTime;
+    private byte[] mainImage;
 
     public static BoardDto toDto(Board board) {
         return new BoardDto(
@@ -28,7 +30,9 @@ public class BoardDto {
                 board.getContent(),
                 board.getUser().getName(),
                 board.getRegDate(),
-                board.getRegTime());
+                board.getRegTime(),
+                ImageUtils.decompressImage(board.getBoardImage1())
+        );
     }
 
 }

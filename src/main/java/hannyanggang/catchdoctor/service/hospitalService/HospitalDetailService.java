@@ -7,10 +7,13 @@ import hannyanggang.catchdoctor.entity.User;
 import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalDetailRepository;
 import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalRepository;
 import hannyanggang.catchdoctor.role.UserRole;
+import hannyanggang.catchdoctor.util.ImageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -20,7 +23,7 @@ import java.util.Optional;
 public class HospitalDetailService {
     private final HospitalDetailRepository hospitalDetailRepository;
     private final HospitalRepository hospitalRepository;
-    public HospitalDetail hospitalMyPage(HospitalDetailDto hospitalDetailsDto, String hospitalId) {
+    public HospitalDetail hospitalMyPage(HospitalDetailDto hospitalDetailsDto, String hospitalId, MultipartFile[] files) throws IOException {
         Hospital hospital = hospitalRepository.findById(hospitalId);
 
         HospitalDetail hospitalDetail = HospitalDetail.builder()
@@ -47,6 +50,26 @@ public class HospitalDetailService {
                 .lunch_start(hospitalDetailsDto.getLunch_start())
                 .lunch_end(hospitalDetailsDto.getLunch_end())
                 .build();
+        for (int i = 0; i < files.length && i < 5; i++) {
+            byte[] compressedImage = ImageUtils.compressImage(files[i].getBytes());
+            switch (i) {
+                case 0:
+                    hospitalDetail.setBoardImage1(compressedImage);
+                    break;
+                case 1:
+                    hospitalDetail.setBoardImage2(compressedImage);
+                    break;
+                case 2:
+                    hospitalDetail.setBoardImage3(compressedImage);
+                    break;
+                case 3:
+                    hospitalDetail.setBoardImage4(compressedImage);
+                    break;
+                case 4:
+                    hospitalDetail.setBoardImage5(compressedImage);
+                    break;
+            }
+        }
         hospital.setHospitalDetail(hospitalDetail);
         hospitalDetailRepository.save(hospitalDetail);
         hospitalRepository.save(hospital);

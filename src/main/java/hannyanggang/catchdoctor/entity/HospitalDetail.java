@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -94,6 +95,29 @@ public class HospitalDetail {
     @Column(name = "lunch_end")
     private String lunch_end;
 
-    // 병원 이미지는 추후 추가예정
+    @Lob
+    @JsonIgnore
+    @Column(name = "boardimage1")
+    private byte[] boardImage1;
+
+    @Lob
+    @JsonIgnore
+    @Column(name = "boardimage2")
+    private byte[] boardImage2;
+
+    @Lob
+    @JsonIgnore
+    @Column(name = "boardimage3")
+    private byte[] boardImage3;
+
+    @Lob
+    @JsonIgnore
+    @Column(name = "boardimage4")
+    private byte[] boardImage4;
+
+    @Lob
+    @JsonIgnore
+    @Column(name = "boardimage5")
+    private byte[] boardImage5;
 
 }

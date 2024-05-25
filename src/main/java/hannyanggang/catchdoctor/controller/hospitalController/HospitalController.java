@@ -32,7 +32,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -124,9 +126,10 @@ public class HospitalController {
     // 병원 detaill 작성
     @Operation(summary = "병원 상세정보", description="병원 상세정보 입력")
     @PostMapping("/hospitaldetail")
-    public Response hospitalDetail(Authentication authentication, @RequestBody HospitalDetailDto hospitalDetailDto) {
+    public Response hospitalDetail(Authentication authentication, @RequestPart("hospitalDetailDto") HospitalDetailDto hospitalDetailDto,
+                                   @RequestPart("image") MultipartFile[] files) throws IOException {
         String Id = authentication.getName();
-        return new Response("입력", "병원 정보 입력", hospitalDetailService.hospitalMyPage(hospitalDetailDto, Id));
+        return new Response("입력", "병원 정보 입력", hospitalDetailService.hospitalMyPage(hospitalDetailDto, Id, files));
     }
 
     @Operation(summary = "병원 상세정보 수정", description="병원 상세정보 수정")
