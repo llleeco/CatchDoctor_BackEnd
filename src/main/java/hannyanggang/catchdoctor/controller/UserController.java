@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -88,6 +89,28 @@ public class UserController {
     public Response2 findFavoriteBoards(@RequestParam(defaultValue = "0") Integer page){
         return Response2.success(userService.findBookmarkHospitals(page, getPrincipal()));
     }
+
+    @Operation(summary="검색어 저장", description = "유저의 검색어를 저장")
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping("/users/search/save/{keyword}")
+    public Response<?> SearchSave(@PathVariable String keyword) {
+        return new Response<>("true", "검색어 저장", userService.SearchSave(keyword,getPrincipal()));
+    }
+
+    @Operation(summary="최근 검색어 요청", description = "유저의 최근 검색어 요청")
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/users/search/request")
+    public Response<?> finSearchRequestdUser() {
+        return new Response<>("true", "최근 검색어 요청", userService.SearchRequest(getPrincipal()));
+    }
+
+    @Operation(summary="최근 검색어 삭제", description = "유저의 최근 검색어 삭제")
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping("/users/search/remove/{keyword}")
+    public Response<?> findUser(@PathVariable String keyword) {
+        return new Response<>("true", "검색어 삭제", userService.SearchRemove(keyword,getPrincipal()));
+    }
+
     @GetMapping("/tokencheck")
     public Response tokenCheck(){
         return new Response("이게뭐지","아무것도안해","string");

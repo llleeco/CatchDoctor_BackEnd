@@ -3,6 +3,7 @@ package hannyanggang.catchdoctor.service;
 import hannyanggang.catchdoctor.dto.BoardLikeListDto;
 import hannyanggang.catchdoctor.dto.BookmarkListDto;
 import hannyanggang.catchdoctor.dto.LoginRequestDto;
+import hannyanggang.catchdoctor.dto.SearchHistoryDto;
 import hannyanggang.catchdoctor.dto.hospitalDto.HospitalFindAllResponseDto;
 import hannyanggang.catchdoctor.dto.hospitalDto.HospitalFindAllWithPagingResponseDto;
 import hannyanggang.catchdoctor.dto.hospitalDto.PageInfoDto;
@@ -11,10 +12,12 @@ import hannyanggang.catchdoctor.entity.Board;
 import hannyanggang.catchdoctor.entity.BoardLike;
 import hannyanggang.catchdoctor.entity.BookMark;
 import hannyanggang.catchdoctor.entity.Hospital;
+import hannyanggang.catchdoctor.entity.SearchHistory;
 import hannyanggang.catchdoctor.entity.User;
 import hannyanggang.catchdoctor.repository.BoardLikeRepository;
 import hannyanggang.catchdoctor.repository.BoardRepository;
 import hannyanggang.catchdoctor.repository.BookMarkRepository;
+import hannyanggang.catchdoctor.repository.SearchHistoryRepository;
 import hannyanggang.catchdoctor.repository.UserRepository;
 import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalRepository;
 import hannyanggang.catchdoctor.role.UserRole;
@@ -25,6 +28,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,7 +44,8 @@ public class UserService {
     private final HospitalRepository hospitalRepository;
     private final BoardRepository boardRepository;
     private final BoardLikeRepository boardLikeRepository;
-   // private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final SearchHistoryRepository searchHistoryRepository;
+
     public User register(UserRegisterDto registerDto) {
         User user = User.builder()
                 .id(registerDto.getId())
@@ -196,6 +202,43 @@ public class UserService {
         Board board = optionalBoard.get();
         Optional<BoardLike> optionalBoardLike = boardLikeRepository.findByBoardAndUser(board,user);
         return optionalBoardLike.isPresent();
+    }
+
+    public String SearchSave(String keyword, User user) {
+        if (keyword == null || keyword.isEmpty()) {
+            return "저장할 검색어를 입력해주세요.";
+        }
+        if (user == null) {
+            return "유저를 찾을 수 없습니다.";
+        }
+        SearchHistory searchHistory = SearchHistory.builder()
+                .keyword(keyword)
+                .searchDate(LocalDate.now())
+                .searchTime(LocalTime.now())
+                .user(user)
+                .build();
+        searchHistoryRepository.save(searchHistory);
+        return "검색어가 저장되었습니다.";
+    }
+    public List<SearchHistoryDto> SearchRequest(User user) {
+        return searchHistoryRepository.findByUser(user).stream()
+                .map(SearchHistoryDto::new)
+                .collect(toList());
+
+    }
+    public String SearchRemove(String keyword,User user){
+        if (keyword == null || keyword.isEmpty()) {
+            return "검색어를 입력해주세요.";
+        }
+        if (user == null) {
+            return "유저를 찾을 수 없습니다.";
+        }
+        SearchHistory searchHistory = searchHistoryRepository.findByKeywordAndUser(keyword,user);
+        if (searchHistory == null) {
+            return "최근 검색어를 찾을 수 없습니다.";
+        }
+        searchHistoryRepository.delete(searchHistory);
+        return "검색어가 삭제되었습니다.";
     }
     public class ResourceNotFoundException extends RuntimeException {
         public ResourceNotFoundException(String message) {
