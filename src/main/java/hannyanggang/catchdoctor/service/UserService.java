@@ -70,19 +70,14 @@ public class UserService {
     public User login(LoginRequestDto loginDto){
         //getUsername- 로그인 아이디 가져오기
         Optional<User> optionalUser = Optional.ofNullable(userRepository.findById(loginDto.getId()));
-
         if(optionalUser.isEmpty()){
             return null;
         }
-
         User user=optionalUser.get();
-
         if(!user.getPassword().equals(loginDto.getPassword())){
             return null;
         }
-
         return user;
-
     }
 
     public User getLoginUserByLoginId(String id) {
@@ -92,14 +87,6 @@ public class UserService {
         return optionalUser.orElse(null);
 
     }
-
-    public boolean checkLoginIdDuplicate(String id) {
-        return userRepository.existsById(id);
-    }
-
-//    public void join2(UserRegisterDto joinRequest) {
-//        userRepository.save(joinRequest.toEntity(encoder.encode(joinRequest.getPassword())));
-//    }
 
     @Transactional
     public String updateBookmarkHospital(Long id, User user) {

@@ -10,7 +10,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,14 +28,6 @@ public class JwtLoginApiController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/user/join")
     public Response<?> userjoin(@RequestBody UserRegisterDto joinRequest) {
-
-        // loginId 중복 체크
-//        if(userService.checkLoginIdDuplicate(joinRequest.getUserId())) {
-//            return "로그인 아이디가 중복됩니다.";
-//            return new Response<>("false", "가입 실패", userService.fail);
-//
-//
-//        }
        return new Response<>("true", "가입 성공", userService.register(joinRequest));
     }
 
@@ -63,9 +60,4 @@ public class JwtLoginApiController {
         return String.format("loginId : %s\nname : %s\nrole : %s",
                 loginUser.getId(), loginUser.getName(), loginUser.getRole().name());
     }
-
-//    @GetMapping("/admin")
-//    public String adminPage() {
-//        return "관리자 페이지 접근 성공";
-//    }
 }

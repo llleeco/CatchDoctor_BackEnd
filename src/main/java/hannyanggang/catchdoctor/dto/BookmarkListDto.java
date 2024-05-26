@@ -1,8 +1,6 @@
 package hannyanggang.catchdoctor.dto;
 
 import hannyanggang.catchdoctor.entity.BookMark;
-import hannyanggang.catchdoctor.entity.Hospital;
-import hannyanggang.catchdoctor.entity.User;
 import lombok.Getter;
 
 @Getter

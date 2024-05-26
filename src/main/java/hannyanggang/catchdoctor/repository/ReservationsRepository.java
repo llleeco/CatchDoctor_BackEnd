@@ -2,25 +2,23 @@ package hannyanggang.catchdoctor.repository;
 
 import hannyanggang.catchdoctor.entity.Hospital;
 import hannyanggang.catchdoctor.entity.Reservations;
-import hannyanggang.catchdoctor.entity.User;
 import jakarta.persistence.LockModeType;
 import jakarta.persistence.QueryHint;
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface ReservationsRepository extends JpaRepository<Reservations, String> {
-
-    @Query("SELECT COUNT(a) FROM Reservations a WHERE a.hospital.hospitalid = :hospitalid AND a.reservationDate = :reservationDate AND a.reservationTime = :reservationTime")
-    int countByHospital_HospitalIdAndReservationDateAndReservationTime(@Param("hospitalid") Long hospitalId, @Param("reservationDate") LocalDate reservationDate, @Param("reservationTime") LocalTime reservationTime);
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @QueryHints({ @QueryHint(name = "jakarta.persistence.lock.timeout", value = "5000") }) // 5초 타임아웃 설정
@@ -41,28 +39,15 @@ public interface ReservationsRepository extends JpaRepository<Reservations, Stri
     @Query("UPDATE Reservations a SET a.status = '진료완료' WHERE a.reservationDate < :currentDate AND a.status = '예약신청'")
     int updateStatusForPastReservations(LocalDate currentDate);
 
-    List<Reservations> findByUser_IdOrderByReservationDateDesc(String userId);
-
     List<Reservations> findByUser_IdOrderByReservationDateAsc(String userId);
 
     List<Reservations> findByHospital_IdOrderByReservationDateAscReservationTimeAsc(String hospitalId);
-
-    @Query("SELECT a FROM Reservations a JOIN a.user p JOIN a.hospital h WHERE p.id = :id AND h.name LIKE :name AND a.reservationDate = :reservationDate ORDER BY a.reservationDate DESC")
-    List<Reservations> findByUser_IdAndHospital_NameLikeAndReservationDate(@Param("id") String id, @Param("name") String name, @Param("reservationDate") LocalDate reservationDate);
-
-    @Query("SELECT a FROM Reservations a JOIN a.user p JOIN a.hospital h WHERE p.id = :id AND a.reservationDate = :reservationDate ORDER BY a.reservationDate DESC")
-    List<Reservations> findByUser_IdAndReservationDate(@Param("id") String id, @Param("reservationDate") LocalDate reservationDate);
-
-    @Query("SELECT a FROM Reservations a JOIN a.user p JOIN a.hospital h WHERE p.id= :id AND h.name LIKE :name ORDER BY a.reservationDate DESC")
-    List<Reservations> findByUser_IdAndHospital_Name(@Param("id") String id, @Param("name") String name);
 
     //예약 취소하기 위해
     @Query("SELECT a FROM Reservations a WHERE a.user.id = :id AND a.reservationId = :reservationId")
     Optional<Reservations> findByUser_IdAndReservationId(@Param("reservationId") Long reservationId, @Param("id") String id);
 
     Reservations findByHospitalAndReservationDateAndReservationTime(Hospital hospital, LocalDate date, LocalTime time);
-
-    Reservations findByHospitalAndUser(Hospital hospital, User user);
 
     Reservations findByReservationId(Long id);
 }

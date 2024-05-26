@@ -1,6 +1,5 @@
 package hannyanggang.catchdoctor.dto.hospitalDto;
 
-import hannyanggang.catchdoctor.entity.BookMark;
 import hannyanggang.catchdoctor.entity.OpenApiHospital;
 import lombok.Getter;
 

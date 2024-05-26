@@ -1,36 +1,28 @@
 package hannyanggang.catchdoctor.controller.hospitalController;
 
+import hannyanggang.catchdoctor.dto.hospitalDto.HospitalDTO;
+import hannyanggang.catchdoctor.dto.hospitalDto.HospitalDetailDto;
 import hannyanggang.catchdoctor.dto.hospitalDto.SearchResponseDto;
 import hannyanggang.catchdoctor.entity.Hospital;
 import hannyanggang.catchdoctor.entity.HospitalDetail;
-import hannyanggang.catchdoctor.entity.User;
-import hannyanggang.catchdoctor.dto.hospitalDto.HospitalDetailDto;
-import hannyanggang.catchdoctor.dto.hospitalDto.HospitalSetDto;
 import hannyanggang.catchdoctor.exception.CustomValidationException;
-import hannyanggang.catchdoctor.repository.UserRepository;
 import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalDetailRepository;
-import hannyanggang.catchdoctor.response.Response;
-import hannyanggang.catchdoctor.response.Response2;
 import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalRepository;
+import hannyanggang.catchdoctor.response.Response;
 import hannyanggang.catchdoctor.service.hospitalService.HospitalDetailService;
 import hannyanggang.catchdoctor.service.hospitalService.HospitalService;
-import hannyanggang.catchdoctor.dto.hospitalDto.HospitalDTO;
 import hannyanggang.catchdoctor.service.hospitalService.OpenApiService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -39,7 +31,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -53,8 +44,6 @@ public class HospitalController {
 
     //진료과목 리스트
     private static final List<String> VALID_DEPARTMENTS = Arrays.asList("소아청소년과", "내과", "이비인후과", "정형외과", "안과", "산부인과", "신경외과", "피부과", "정신건강의학과");
-
-
 
     @Operation(summary = "특정 병원 정보", description = "특정 병원 정보요청하기")
     @GetMapping("/findhospital/{hospitalid}")
@@ -165,17 +154,13 @@ public class HospitalController {
     @Operation(summary = "병원 이름 확인", description="등록되어 있는 병원인지 확인")
     @GetMapping("/checkhospital/{hospitalname}")
     public Response checkhospital(@PathVariable String hospitalname){
-        return new Response("확인", "등록된 병원이름 확인", openApiService.checkhospital(hospitalname));
+        return new Response("확인", "등록된 병원이름 확인", openApiService.checkHospital(hospitalname));
     }
     // 다운로드
     @Operation(summary = "병원 이미지 요청", description="등록한 병원 이미지 리턴")
     @GetMapping("/download/{detailId}")
     public ResponseEntity<?> downloadImage(@PathVariable("detailId") Long detailId) {
         List<byte[]> downloadImage = hospitalDetailService.downloadImagesBoard(detailId);
-//        byte[] imageData = downloadImage.get(0);
-//        return ResponseEntity.ok()
-//                .contentType(MediaType.IMAGE_PNG)
-//                .body(imageData);
         return ResponseEntity.ok(downloadImage);
     }
 

@@ -4,7 +4,6 @@ import hannyanggang.catchdoctor.dto.reservationsDTO.ReservationsDTO;
 import hannyanggang.catchdoctor.entity.Hospital;
 import hannyanggang.catchdoctor.entity.Reservations;
 import hannyanggang.catchdoctor.entity.User;
-import hannyanggang.catchdoctor.exception.CustomValidationException;
 import hannyanggang.catchdoctor.repository.ReservationsRepository;
 import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalRepository;
 import jakarta.transaction.Transactional;
@@ -18,7 +17,6 @@ import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service

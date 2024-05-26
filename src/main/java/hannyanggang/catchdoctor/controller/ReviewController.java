@@ -1,23 +1,27 @@
 package hannyanggang.catchdoctor.controller;
 
 import hannyanggang.catchdoctor.dto.ReviewDto;
-import hannyanggang.catchdoctor.entity.Reservations;
 import hannyanggang.catchdoctor.entity.Review;
 import hannyanggang.catchdoctor.entity.User;
 import hannyanggang.catchdoctor.repository.ReservationsRepository;
 import hannyanggang.catchdoctor.repository.ReviewRepository;
 import hannyanggang.catchdoctor.repository.UserRepository;
-import hannyanggang.catchdoctor.response.Response2;
 import hannyanggang.catchdoctor.service.ReviewService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +36,6 @@ public class ReviewController {
     private final ReviewService reviewService;
     private final UserRepository userRepository;
     private final ReviewRepository reviewRepository;
-    private final ReservationsRepository reservationsRepository;
 
     @Operation(summary = "리뷰 조회", description = "전체 리뷰를 조회한다.")
     @GetMapping("/{hospital_id}/all")

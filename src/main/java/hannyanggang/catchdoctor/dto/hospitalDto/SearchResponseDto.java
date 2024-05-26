@@ -1,6 +1,5 @@
 package hannyanggang.catchdoctor.dto.hospitalDto;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import hannyanggang.catchdoctor.entity.Hospital;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -8,29 +8,25 @@ import hannyanggang.catchdoctor.repository.ReservationsRepository;
 import hannyanggang.catchdoctor.repository.UserRepository;
 import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalRepository;
 import jakarta.persistence.LockTimeoutException;
-//import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
 public class ReservationsService {
     private final ReservationsRepository reservationsRepository;
-
     private final UserRepository patientRepository;
-
     private final HospitalRepository hospitalRepository;
 
     // 매일 자정에 실행되는 스케줄링된 작업

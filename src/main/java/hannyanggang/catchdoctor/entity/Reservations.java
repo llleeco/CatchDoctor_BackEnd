@@ -1,7 +1,6 @@
 package hannyanggang.catchdoctor.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import hannyanggang.catchdoctor.exception.CustomValidationException;
 import hannyanggang.catchdoctor.repository.UserRepository;
 import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalRepository;

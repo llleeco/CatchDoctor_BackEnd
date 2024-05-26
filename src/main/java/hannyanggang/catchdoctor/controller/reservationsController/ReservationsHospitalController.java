@@ -1,13 +1,10 @@
 package hannyanggang.catchdoctor.controller.reservationsController;
 
 import hannyanggang.catchdoctor.dto.reservationsDTO.ReservationsDTO;
-import hannyanggang.catchdoctor.entity.User;
 import hannyanggang.catchdoctor.exception.CustomValidationException;
 import hannyanggang.catchdoctor.service.ReservationsService.CancelReservationHospitalService;
 import hannyanggang.catchdoctor.service.ReservationsService.CompleteReservationsService;
 import hannyanggang.catchdoctor.service.ReservationsService.ConfirmReservationsService;
-import hannyanggang.catchdoctor.service.ReservationsService.ReservationsService;
-import hannyanggang.catchdoctor.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -32,7 +29,6 @@ public class ReservationsHospitalController {
     private final ConfirmReservationsService confirmReservationsService;
     private final CompleteReservationsService completeReservationsService;
     private final CancelReservationHospitalService cancelReservationHospitalService;
-    private final UserService userService;
 
     @Operation(summary = "예약 확정", description="예약 확정으로 상태변경")
     @PostMapping("/confirm")

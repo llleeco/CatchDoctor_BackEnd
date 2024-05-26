@@ -1,7 +1,5 @@
 package hannyanggang.catchdoctor.dto.hospitalDto;
 
-import hannyanggang.catchdoctor.entity.Hospital;
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

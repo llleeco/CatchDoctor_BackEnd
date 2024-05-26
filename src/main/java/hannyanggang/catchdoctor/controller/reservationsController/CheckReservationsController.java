@@ -1,7 +1,6 @@
 package hannyanggang.catchdoctor.controller.reservationsController;
 
 import hannyanggang.catchdoctor.dto.reservationsDTO.ReservationCheckDto;
-import hannyanggang.catchdoctor.dto.reservationsDTO.ReservationsDTO;
 import hannyanggang.catchdoctor.exception.CustomValidationException;
 import hannyanggang.catchdoctor.service.ReservationsService.CheckReservationsService;
 import io.swagger.v3.oas.annotations.Operation;

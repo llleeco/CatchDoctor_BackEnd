@@ -2,18 +2,11 @@ package hannyanggang.catchdoctor.service.hospitalService;
 
 import hannyanggang.catchdoctor.dto.hospitalDto.OpenApiHospitalDto;
 import hannyanggang.catchdoctor.dto.hospitalDto.SearchResponseDto;
-import hannyanggang.catchdoctor.entity.Hospital;
 import hannyanggang.catchdoctor.entity.OpenApiHospital;
-import hannyanggang.catchdoctor.entity.Reservations;
-import hannyanggang.catchdoctor.exception.CustomValidationException;
 import hannyanggang.catchdoctor.repository.hospitalRepository.OpenApiRepository;
-import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalRepository;
-import hannyanggang.catchdoctor.response.Response;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -31,7 +24,6 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class OpenApiService {
     private final OpenApiRepository openApiRepository;
-    private final HospitalRepository hospitalRepository;
 
     public List<SearchResponseDto> searchHospitalsWithDetails(String query, double MyMapX, double MyMapY, int page, int size) {
 
@@ -49,7 +41,6 @@ public class OpenApiService {
                     if (hospitalLatitude == null || hospitalLongitude == null) {
                         hospitalLatitude = 0.0;
                         hospitalLongitude = 0.0;
-//                        throw new CustomValidationException(HttpStatus.BAD_REQUEST.value(), "위치 정보가 없는 병원이 있습니다.");
                     }
 
             double distance = calculateDistance(MyMapX, MyMapY, hospitalLatitude, hospitalLongitude);
@@ -133,15 +124,14 @@ public class OpenApiService {
                     openApiHospital.getHospital()
             );
         }).collect(toList());
-
     }
-    public boolean checkhospital(String hospitalname){
-        OpenApiHospital openApiHospital = openApiRepository.findByHospitalName(hospitalname);
+    public boolean checkHospital(String hospitalName){
+        OpenApiHospital openApiHospital = openApiRepository.findByHospitalName(hospitalName);
         if (openApiHospital == null) {
             return false;
         }
         String openApiName = openApiHospital.getHospitalname();
-        return hospitalname.equals(hospitalname);
+        return hospitalName.equals(openApiName);
     }
 
     public List<OpenApiHospitalDto> findAll() {

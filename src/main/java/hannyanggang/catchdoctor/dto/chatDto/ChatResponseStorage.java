@@ -1,5 +1,5 @@
 package hannyanggang.catchdoctor.dto.chatDto;
-import hannyanggang.catchdoctor.dto.chatDto.ChatGPTResponseDto;
+
 import lombok.Data;
 import org.springframework.stereotype.Component;
 

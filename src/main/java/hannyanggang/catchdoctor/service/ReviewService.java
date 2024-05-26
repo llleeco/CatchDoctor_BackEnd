@@ -1,7 +1,6 @@
 package hannyanggang.catchdoctor.service;
 
 import hannyanggang.catchdoctor.dto.ReviewDto;
-import hannyanggang.catchdoctor.entity.BookMark;
 import hannyanggang.catchdoctor.entity.Hospital;
 import hannyanggang.catchdoctor.entity.Reservations;
 import hannyanggang.catchdoctor.entity.Review;

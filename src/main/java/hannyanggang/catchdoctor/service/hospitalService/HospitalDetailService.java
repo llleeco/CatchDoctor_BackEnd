@@ -1,24 +1,18 @@
 package hannyanggang.catchdoctor.service.hospitalService;
 
 import hannyanggang.catchdoctor.dto.hospitalDto.HospitalDetailDto;
-import hannyanggang.catchdoctor.entity.Board;
 import hannyanggang.catchdoctor.entity.Hospital;
 import hannyanggang.catchdoctor.entity.HospitalDetail;
-import hannyanggang.catchdoctor.entity.User;
 import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalDetailRepository;
 import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalRepository;
-import hannyanggang.catchdoctor.role.UserRole;
 import hannyanggang.catchdoctor.util.ImageUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @Service

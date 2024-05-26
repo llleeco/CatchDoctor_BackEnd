@@ -6,7 +6,6 @@ import hannyanggang.catchdoctor.entity.Comment;
 import hannyanggang.catchdoctor.entity.User;
 import hannyanggang.catchdoctor.repository.BoardRepository;
 import hannyanggang.catchdoctor.repository.CommentRepository;
-import hannyanggang.catchdoctor.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +21,6 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final BoardRepository boardRepository;
-    private final UserRepository userRepository;
 
     // 댓글 작성하기
     @Transactional

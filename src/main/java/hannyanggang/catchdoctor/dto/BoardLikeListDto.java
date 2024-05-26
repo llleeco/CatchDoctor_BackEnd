@@ -1,7 +1,6 @@
 package hannyanggang.catchdoctor.dto;
 
 import hannyanggang.catchdoctor.entity.BoardLike;
-import hannyanggang.catchdoctor.entity.BookMark;
 import lombok.Getter;
 
 @Getter

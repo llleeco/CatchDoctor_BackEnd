@@ -1,13 +1,10 @@
 package hannyanggang.catchdoctor.controller.reservationsController;
 
 import hannyanggang.catchdoctor.dto.reservationsDTO.ReservationsDTO;
-import hannyanggang.catchdoctor.entity.User;
 import hannyanggang.catchdoctor.exception.CustomValidationException;
 import hannyanggang.catchdoctor.service.ReservationsService.ReservationsService;
-import hannyanggang.catchdoctor.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.aop.scope.ScopedProxyUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
@@ -28,7 +25,6 @@ import java.util.Map;
 @RequestMapping("/reservations")
 public class ReservationsController {
     private final ReservationsService reservationsService;
-    private final UserService userService;
 
     @Operation(summary = "병원 예약", description="병원 예약 진행")
     @PostMapping
@@ -41,7 +37,6 @@ public class ReservationsController {
 
 
                 String userId = authentication.getName();
-//                validateRequest(reservationsDTO);
                 return reservationsService.createReservation(reservationsDTO, userId);
 
             } else {
@@ -58,12 +53,6 @@ public class ReservationsController {
                     .body(errorDetails);
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
-
-    private void validateRequest(ReservationsDTO reservationsDTO) {
-        if (reservationsDTO.getReservationTime().getMinute() != 0) {
-            throw new CustomValidationException(HttpStatus.BAD_REQUEST.value(), "잘못된 형식(time)");
         }
     }
 }

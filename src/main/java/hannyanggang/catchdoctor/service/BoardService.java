@@ -2,9 +2,7 @@ package hannyanggang.catchdoctor.service;
 
 import hannyanggang.catchdoctor.dto.BoardDto;
 import hannyanggang.catchdoctor.entity.Board;
-import hannyanggang.catchdoctor.entity.BoardImage;
 import hannyanggang.catchdoctor.entity.User;
-import hannyanggang.catchdoctor.repository.BoardImageRepository;
 import hannyanggang.catchdoctor.repository.BoardRepository;
 import hannyanggang.catchdoctor.util.ImageUtils;
 import lombok.RequiredArgsConstructor;
@@ -13,15 +11,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -29,7 +24,6 @@ import java.util.Set;
 public class BoardService {
 
     private final BoardRepository boardRepository;
-    private final BoardImageRepository boardImageRepository;
 
     // 전체 게시물 조회
     @Transactional(readOnly = true)
@@ -127,8 +121,6 @@ public class BoardService {
 
         return board;
     }
-
-
     // 게시글 삭제
     @Transactional
     public void delete(Long id) {
@@ -142,32 +134,6 @@ public class BoardService {
         boardRepository.deleteById(id);
 
     }
-
-    // 이미지 업로드
-    public List<String> uploadImages(MultipartFile[] files) throws IOException {
-        List<String> uploadedFiles = new ArrayList<>();
-        for (MultipartFile file : files) {
-            String fileName = file.getOriginalFilename();
-            Optional<BoardImage> optionalBoardImage = boardImageRepository.findByName(fileName);
-            if (optionalBoardImage.isPresent()) {
-                uploadedFiles.add("Error: 중복된 제목이 있습니다. 파일제목: " + fileName);
-                continue; // 중복 파일 이름이 있으면 다음 파일로 넘어감
-            }
-            log.info("upload file: {}", file);
-            BoardImage boardImage = boardImageRepository.save(
-                    BoardImage.builder()
-                            .name(file.getOriginalFilename())
-                            .type(file.getContentType())
-                            .boardImage(ImageUtils.compressImage(file.getBytes()))
-                            .build());
-            if (boardImage != null) {
-                log.info("imageData: {}", boardImage);
-                uploadedFiles.add("file uploaded successfully : " + file.getOriginalFilename());
-            }
-        }
-        return uploadedFiles;
-    }
-
     // 이미지 파일로 압축하기
     public List<byte[]> downloadImagesBoard(Long boardId) {
         Optional<Board> optionalBoard = boardRepository.findById(boardId);
