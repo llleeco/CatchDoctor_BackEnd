@@ -1,7 +1,9 @@
 package hannyanggang.catchdoctor.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import hannyanggang.catchdoctor.entity.SearchHistory;
 import hannyanggang.catchdoctor.entity.User;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +22,7 @@ public class SearchHistoryDto {
 
     private LocalDate searchDate;
 
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime searchTime;
 
     private User user;
