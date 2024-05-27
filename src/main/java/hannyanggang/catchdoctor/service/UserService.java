@@ -215,7 +215,7 @@ public class UserService {
         return "검색어가 저장되었습니다.";
     }
     public List<SearchHistoryDto> SearchRequest(User user) {
-        return searchHistoryRepository.findByUserOrderBySearchDateAscSearchTimeAsc(user).stream()
+        return searchHistoryRepository.findByUserOrderBySearchDateDescSearchTimeDesc(user).stream()
                 .map(SearchHistoryDto::new)
                 .collect(toList());
 
