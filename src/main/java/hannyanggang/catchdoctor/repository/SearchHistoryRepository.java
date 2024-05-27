@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SearchHistoryRepository extends JpaRepository<SearchHistory,Long> {
-    List<SearchHistory> findByUser(User user);
+    List<SearchHistory> findByUserOrderBySearchDateAscSearchTimeAsc(User user);
+    SearchHistory findByUserAndKeyword(User user,String keyword);
     SearchHistory findByKeywordAndUser(String keyword,User user);
 }

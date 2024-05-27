@@ -192,6 +192,13 @@ public class UserService {
     }
 
     public String SearchSave(String keyword, User user) {
+        SearchHistory checkSearchHistory = searchHistoryRepository.findByUserAndKeyword(user,keyword);
+        if(checkSearchHistory != null) {
+            checkSearchHistory.setSearchDate(LocalDate.now());
+            checkSearchHistory.setSearchTime(LocalTime.now());
+            searchHistoryRepository.save(checkSearchHistory);
+            return "검색어를 다시 저장했습니다.";
+        }
         if (keyword == null || keyword.isEmpty()) {
             return "저장할 검색어를 입력해주세요.";
         }
@@ -208,7 +215,7 @@ public class UserService {
         return "검색어가 저장되었습니다.";
     }
     public List<SearchHistoryDto> SearchRequest(User user) {
-        return searchHistoryRepository.findByUser(user).stream()
+        return searchHistoryRepository.findByUserOrderBySearchDateAscSearchTimeAsc(user).stream()
                 .map(SearchHistoryDto::new)
                 .collect(toList());
 
