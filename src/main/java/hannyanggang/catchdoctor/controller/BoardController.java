@@ -1,7 +1,9 @@
 package hannyanggang.catchdoctor.controller;
 
 import hannyanggang.catchdoctor.dto.BoardDto;
+import hannyanggang.catchdoctor.entity.Board;
 import hannyanggang.catchdoctor.entity.User;
+import hannyanggang.catchdoctor.repository.BoardRepository;
 import hannyanggang.catchdoctor.repository.UserRepository;
 import hannyanggang.catchdoctor.response.Response;
 import hannyanggang.catchdoctor.service.BoardService;
@@ -22,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -29,6 +32,7 @@ public class BoardController {
 
     private final BoardService boardService;
     private final UserRepository userRepository;
+    private final BoardRepository boardRepository;
 
     // 전체 게시글 조회
     @Operation(summary = "전체 게시글 보기", description = "전체 게시글을 조회한다.")
@@ -52,6 +56,9 @@ public class BoardController {
                           @RequestPart("image") MultipartFile[] files) throws IOException {
         String userId = authentication.getName();
         User user = userRepository.findById(userId);
+        if(files[0].isEmpty()){
+            files[0] = null;
+        }
         return new Response("성공", "글 작성 성공", boardService.write(boardDto, user, files));
     }
     // 게시글 수정
@@ -62,7 +69,12 @@ public class BoardController {
                          Authentication authentication, @RequestPart("image") MultipartFile[] files) throws IOException {
         String userId = authentication.getName();
         User user = userRepository.findById(userId);
-        if (user.getName().equals(boardService.getBoard(id).getWriter())) {
+        if(files[0].isEmpty()){
+            files[0] = null;
+        }
+        Optional<Board> optionalBoard = boardRepository.findById(id);
+        String boardName = optionalBoard.get().getUser().getName();
+        if (boardName == user.getName()) {
             // 로그인된 유저의 글이 맞다면
             return new Response("성공", "글 수정 성공", boardService.update(id, boardDto,files));
         } else {
@@ -77,7 +89,9 @@ public class BoardController {
     public Response delete(@PathVariable("id") Long id, Authentication authentication) {
         String userId = authentication.getName();
         User user = userRepository.findById(userId);
-        if (user.getName().equals(boardService.getBoard(id).getWriter())) {
+        Optional<Board> optionalBoard = boardRepository.findById(id);
+        String boardName = optionalBoard.get().getUser().getName();
+        if (boardName == user.getName()) {
             // 로그인된 유저가 글 작성자와 같다면
             boardService.delete(id); // 이 메소드는 반환값이 없으므로 따로 삭제 수행해주고, 리턴에는 null을 넣어줌
             return new Response("성공", "글 삭제 성공", null);

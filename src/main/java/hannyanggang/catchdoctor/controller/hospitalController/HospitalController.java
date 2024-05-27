@@ -118,6 +118,9 @@ public class HospitalController {
     public Response hospitalDetail(Authentication authentication, @RequestPart("hospitalDetailDto") HospitalDetailDto hospitalDetailDto,
                                    @RequestPart("image") MultipartFile[] files) throws IOException {
         String Id = authentication.getName();
+        if(files[0].isEmpty()){
+            files[0] = null;
+        }
         return new Response("입력", "병원 정보 입력", hospitalDetailService.hospitalMyPage(hospitalDetailDto, Id, files));
     }
 
@@ -130,7 +133,10 @@ public class HospitalController {
         HospitalDetail hospitalDetail = hospitalDetailRepository.findByHospital(hospital);
         // 병원 상세 정보의 ID가 URL의 ID와 일치하는지 확인
         if (!hospitalDetail.getId().equals(detail_id)) {
-            throw new BadRequestException("Detail ID mismatch");
+            throw new BadRequestException("로그인 정보가 일치하지 않습니다.");
+        }
+        if(files[0].isEmpty()){
+            files[0] = null;
         }
         return new Response("수정", "병원 정보 수정", hospitalDetailService.modifyHospitalMyPage(hospitalDetailDto, detail_id, files));
     }

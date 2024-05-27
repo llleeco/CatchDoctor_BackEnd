@@ -47,26 +47,31 @@ public class HospitalDetailService {
                 .lunch_start(hospitalDetailsDto.getLunch_start())
                 .lunch_end(hospitalDetailsDto.getLunch_end())
                 .build();
-        for (int i = 0; i < files.length && i < 5; i++) {
-            byte[] compressedImage = ImageUtils.compressImage(files[i].getBytes());
-            switch (i) {
-                case 0:
-                    hospitalDetail.setBoardImage1(compressedImage);
-                    break;
-                case 1:
-                    hospitalDetail.setBoardImage2(compressedImage);
-                    break;
-                case 2:
-                    hospitalDetail.setBoardImage3(compressedImage);
-                    break;
-                case 3:
-                    hospitalDetail.setBoardImage4(compressedImage);
-                    break;
-                case 4:
-                    hospitalDetail.setBoardImage5(compressedImage);
-                    break;
+
+        // 파일이 존재하는 경우에만 이미지를 처리
+        if (files[0] != null) {
+            for (int i = 0; i < files.length && i < 5; i++) {
+                byte[] compressedImage = ImageUtils.compressImage(files[i].getBytes());
+                switch (i) {
+                    case 0:
+                        hospitalDetail.setBoardImage1(compressedImage);
+                        break;
+                    case 1:
+                        hospitalDetail.setBoardImage2(compressedImage);
+                        break;
+                    case 2:
+                        hospitalDetail.setBoardImage3(compressedImage);
+                        break;
+                    case 3:
+                        hospitalDetail.setBoardImage4(compressedImage);
+                        break;
+                    case 4:
+                        hospitalDetail.setBoardImage5(compressedImage);
+                        break;
+                }
             }
         }
+
         hospital.setHospitalDetail(hospitalDetail);
         hospitalDetailRepository.save(hospitalDetail);
         hospitalRepository.save(hospital);
@@ -97,7 +102,7 @@ public class HospitalDetailService {
         hospitalDetail.setHol_close(hospitalDetailsDto.getHol_close());
         hospitalDetail.setLunch_start(hospitalDetailsDto.getLunch_start());
         hospitalDetail.setLunch_end(hospitalDetailsDto.getLunch_end());
-        if (files != null) {
+        if (files[0] != null) {
             hospitalDetail.setBoardImage1(null);
             hospitalDetail.setBoardImage2(null);
             hospitalDetail.setBoardImage3(null);

@@ -51,24 +51,26 @@ public class BoardService {
         board.setTitle(boardDto.getTitle());
         board.setContent(boardDto.getContent());
         board.setUser(user);
-        for (int i = 0; i < files.length && i < 5; i++) {
-            byte[] compressedImage = ImageUtils.compressImage(files[i].getBytes());
-            switch (i) {
-                case 0:
-                    board.setBoardImage1(compressedImage);
-                    break;
-                case 1:
-                    board.setBoardImage2(compressedImage);
-                    break;
-                case 2:
-                    board.setBoardImage3(compressedImage);
-                    break;
-                case 3:
-                    board.setBoardImage4(compressedImage);
-                    break;
-                case 4:
-                    board.setBoardImage5(compressedImage);
-                    break;
+        if(files[0] != null){
+            for (int i = 0; i < files.length && i < 5; i++) {
+                byte[] compressedImage = ImageUtils.compressImage(files[i].getBytes());
+                switch (i) {
+                    case 0:
+                        board.setBoardImage1(compressedImage);
+                        break;
+                    case 1:
+                        board.setBoardImage2(compressedImage);
+                        break;
+                    case 2:
+                        board.setBoardImage3(compressedImage);
+                        break;
+                    case 3:
+                        board.setBoardImage4(compressedImage);
+                        break;
+                    case 4:
+                        board.setBoardImage5(compressedImage);
+                        break;
+                }
             }
         }
         board.setRegDate(LocalDate.now());
@@ -86,7 +88,7 @@ public class BoardService {
 
         board.setTitle(boardDto.getTitle());
         board.setContent(boardDto.getContent());
-        if (files != null) {
+        if (files[0] != null) {
             board.setBoardImage1(null);
             board.setBoardImage2(null);
             board.setBoardImage3(null);
