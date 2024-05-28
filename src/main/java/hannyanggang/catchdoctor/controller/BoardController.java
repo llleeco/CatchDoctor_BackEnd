@@ -64,7 +64,7 @@ public class BoardController {
     // 게시글 작성
     @Operation(summary = "게시글 작성(이미지x)", description = "게시글을 작성한다.")
     @ResponseStatus(HttpStatus.CREATED)
-    @PostMapping("/boards/write")
+    @PostMapping("/boards/write2")
     public Response write2(@RequestPart("boardDto") BoardDto boardDto, Authentication authentication) {
         String userId = authentication.getName();
         User user = userRepository.findById(userId);
