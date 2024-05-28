@@ -78,6 +78,18 @@ public class BoardService {
         boardRepository.save(board);
         return board;
     }
+    // 게시물 작성 이미지 x
+    @Transactional
+    public Board write2(BoardDto boardDto, User user) {
+        Board board = new Board();
+        board.setTitle(boardDto.getTitle());
+        board.setContent(boardDto.getContent());
+        board.setUser(user);
+        board.setRegDate(LocalDate.now());
+        board.setRegTime(LocalTime.now());
+        boardRepository.save(board);
+        return board;
+    }
 
     // 게시물 수정
     @Transactional

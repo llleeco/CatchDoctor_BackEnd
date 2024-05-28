@@ -113,7 +113,7 @@ public class HospitalController {
     }
 
     // 병원 detaill 작성
-    @Operation(summary = "병원 상세정보", description="병원 상세정보 입력")
+    @Operation(summary = "병원 상세정보(이미지o)", description="병원 상세정보 입력(이미지o)")
     @PostMapping("/hospitaldetail")
     public Response hospitalDetail(Authentication authentication, @RequestPart("hospitalDetailDto") HospitalDetailDto hospitalDetailDto,
                                    @RequestPart("image") MultipartFile[] files) throws IOException {
@@ -122,6 +122,14 @@ public class HospitalController {
             files[0] = null;
         }
         return new Response("입력", "병원 정보 입력", hospitalDetailService.hospitalMyPage(hospitalDetailDto, Id, files));
+    }
+
+    // 병원 detaill 작성
+    @Operation(summary = "병원 상세정보(이미지x)", description="병원 상세정보 입력(이미지x)")
+    @PostMapping("/hospitaldetail2")
+    public Response hospitalDetail2(Authentication authentication, @RequestPart("hospitalDetailDto") HospitalDetailDto hospitalDetailDto) {
+        String Id = authentication.getName();
+        return new Response("입력", "병원 정보 입력", hospitalDetailService.hospitalMyPage2(hospitalDetailDto, Id));
     }
 
     @Operation(summary = "병원 상세정보 수정", description="병원 상세정보 수정")

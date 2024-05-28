@@ -20,32 +20,32 @@ import java.util.Optional;
 public class HospitalDetailService {
     private final HospitalDetailRepository hospitalDetailRepository;
     private final HospitalRepository hospitalRepository;
-    public HospitalDetail hospitalMyPage(HospitalDetailDto hospitalDetailsDto, String hospitalId, MultipartFile[] files) throws IOException {
+    public HospitalDetail hospitalMyPage(HospitalDetailDto hospitalDetailDto, String hospitalId, MultipartFile[] files) throws IOException {
         Hospital hospital = hospitalRepository.findById(hospitalId);
 
         HospitalDetail hospitalDetail = HospitalDetail.builder()
                 .hospital(hospital)
-                .hospitalInfo(hospitalDetailsDto.getHospitalInfo())
-                .department(hospitalDetailsDto.getDepartment())
-                .doctorInfo(hospitalDetailsDto.getDoctorInfo())
-                .mon_open(hospitalDetailsDto.getMon_open())
-                .mon_close(hospitalDetailsDto.getMon_close())
-                .tue_open(hospitalDetailsDto.getTue_open())
-                .tue_close(hospitalDetailsDto.getTue_close())
-                .wed_open(hospitalDetailsDto.getWed_open())
-                .wed_close(hospitalDetailsDto.getWed_close())
-                .thu_open(hospitalDetailsDto.getThu_open())
-                .thu_close(hospitalDetailsDto.getThu_close())
-                .fri_open(hospitalDetailsDto.getFri_open())
-                .fri_close(hospitalDetailsDto.getFri_close())
-                .sat_open(hospitalDetailsDto.getSat_open())
-                .sat_close(hospitalDetailsDto.getSat_close())
-                .sun_open(hospitalDetailsDto.getSun_open())
-                .sun_close(hospitalDetailsDto.getSun_close())
-                .hol_open(hospitalDetailsDto.getHol_open())
-                .hol_close(hospitalDetailsDto.getHol_close())
-                .lunch_start(hospitalDetailsDto.getLunch_start())
-                .lunch_end(hospitalDetailsDto.getLunch_end())
+                .hospitalInfo(hospitalDetailDto.getHospitalInfo())
+                .department(hospitalDetailDto.getDepartment())
+                .doctorInfo(hospitalDetailDto.getDoctorInfo())
+                .mon_open(hospitalDetailDto.getMon_open())
+                .mon_close(hospitalDetailDto.getMon_close())
+                .tue_open(hospitalDetailDto.getTue_open())
+                .tue_close(hospitalDetailDto.getTue_close())
+                .wed_open(hospitalDetailDto.getWed_open())
+                .wed_close(hospitalDetailDto.getWed_close())
+                .thu_open(hospitalDetailDto.getThu_open())
+                .thu_close(hospitalDetailDto.getThu_close())
+                .fri_open(hospitalDetailDto.getFri_open())
+                .fri_close(hospitalDetailDto.getFri_close())
+                .sat_open(hospitalDetailDto.getSat_open())
+                .sat_close(hospitalDetailDto.getSat_close())
+                .sun_open(hospitalDetailDto.getSun_open())
+                .sun_close(hospitalDetailDto.getSun_close())
+                .hol_open(hospitalDetailDto.getHol_open())
+                .hol_close(hospitalDetailDto.getHol_close())
+                .lunch_start(hospitalDetailDto.getLunch_start())
+                .lunch_end(hospitalDetailDto.getLunch_end())
                 .build();
 
         // 파일이 존재하는 경우에만 이미지를 처리
@@ -76,6 +76,39 @@ public class HospitalDetailService {
         hospitalDetailRepository.save(hospitalDetail);
         hospitalRepository.save(hospital);
 
+        return hospitalDetail;
+    }
+
+    public HospitalDetail hospitalMyPage2(HospitalDetailDto hospitalDetailDto,String hospitalId) {
+        Hospital hospital = hospitalRepository.findById(hospitalId);
+
+        HospitalDetail hospitalDetail = HospitalDetail.builder()
+                .hospital(hospital)
+                .hospitalInfo(hospitalDetailDto.getHospitalInfo())
+                .department(hospitalDetailDto.getDepartment())
+                .doctorInfo(hospitalDetailDto.getDoctorInfo())
+                .mon_open(hospitalDetailDto.getMon_open())
+                .mon_close(hospitalDetailDto.getMon_close())
+                .tue_open(hospitalDetailDto.getTue_open())
+                .tue_close(hospitalDetailDto.getTue_close())
+                .wed_open(hospitalDetailDto.getWed_open())
+                .wed_close(hospitalDetailDto.getWed_close())
+                .thu_open(hospitalDetailDto.getThu_open())
+                .thu_close(hospitalDetailDto.getThu_close())
+                .fri_open(hospitalDetailDto.getFri_open())
+                .fri_close(hospitalDetailDto.getFri_close())
+                .sat_open(hospitalDetailDto.getSat_open())
+                .sat_close(hospitalDetailDto.getSat_close())
+                .sun_open(hospitalDetailDto.getSun_open())
+                .sun_close(hospitalDetailDto.getSun_close())
+                .hol_open(hospitalDetailDto.getHol_open())
+                .hol_close(hospitalDetailDto.getHol_close())
+                .lunch_start(hospitalDetailDto.getLunch_start())
+                .lunch_end(hospitalDetailDto.getLunch_end())
+                .build();
+        hospital.setHospitalDetail(hospitalDetail);
+        hospitalRepository.save(hospital);
+        hospitalDetailRepository.save(hospitalDetail);
         return hospitalDetail;
     }
     public HospitalDetail modifyHospitalMyPage (HospitalDetailDto hospitalDetailsDto, Long detail_id, MultipartFile[] files) throws IOException {

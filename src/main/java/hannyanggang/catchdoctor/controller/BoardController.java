@@ -49,7 +49,7 @@ public class BoardController {
         return new Response("성공", "개별 게시물 리턴", boardService.getBoard(id));
     }
     // 게시글 작성
-    @Operation(summary = "게시글 작성", description = "게시글을 작성한다.")
+    @Operation(summary = "게시글 작성(이미지o)", description = "게시글을 작성한다.")
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/boards/write")
     public Response write(@RequestPart("boardDto") BoardDto boardDto, Authentication authentication,
@@ -60,6 +60,15 @@ public class BoardController {
             files[0] = null;
         }
         return new Response("성공", "글 작성 성공", boardService.write(boardDto, user, files));
+    }
+    // 게시글 작성
+    @Operation(summary = "게시글 작성(이미지x)", description = "게시글을 작성한다.")
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping("/boards/write")
+    public Response write2(@RequestPart("boardDto") BoardDto boardDto, Authentication authentication) {
+        String userId = authentication.getName();
+        User user = userRepository.findById(userId);
+        return new Response("성공", "글 작성 성공", boardService.write2(boardDto, user));
     }
     // 게시글 수정
     @Operation(summary = "게시글 수정", description = "게시글을 수정한다.")
