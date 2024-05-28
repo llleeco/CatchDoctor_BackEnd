@@ -42,9 +42,6 @@ public class HospitalController {
     private final HospitalDetailRepository hospitalDetailRepository;
     private final HospitalRepository hospitalRepository;
 
-    //진료과목 리스트
-    private static final List<String> VALID_DEPARTMENTS = Arrays.asList("소아청소년과", "내과", "이비인후과", "정형외과", "안과", "산부인과", "신경외과", "피부과", "정신건강의학과");
-
     @Operation(summary = "특정 병원 정보", description = "특정 병원 정보요청하기")
     @GetMapping("/findhospital/{hospitalid}")
     public Response findHospital(@PathVariable Long hospitalid) {
@@ -68,17 +65,10 @@ public class HospitalController {
         try {
             if ((query == null || query.isEmpty()) && (department == null || department.isEmpty())) { //쿼리 입력값 없을 때 모든 결과 조회
                 responseDTOs = openApiService.getAllHospitals(page, limit);
-            } /*else if ((query != null && !Pattern.matches("^[가-힣\\s]+$", query)) || (department != null && !Pattern.matches("^[가-힣]+$", department))) {
-                throw new CustomValidationException(HttpStatus.BAD_REQUEST.value(), "잘못된 입력(한글만 입력)");
-            }*/ else {
+            } else {
                 if (department != null && !department.isEmpty() && (query == null || query.isEmpty())) { //진료과목으로 검색
                     // department 파라미터에 대한 유효성 검사 (여기에서 유효성 검사 추가)
                     String[] departments = department.split(",");
-                    for (String dept : departments) {
-                        if (!isValidDepartment(dept.trim())) {
-                            throw new CustomValidationException(HttpStatus.BAD_REQUEST.value(), "잘못된 입력");
-                        }
-                    }
                     responseDTOs = openApiService.searchByDepartment(departments, mapx, mapy, page, limit);
 
                 } else if (query != null && !query.isEmpty()) { //쿼리로 검색
@@ -107,11 +97,6 @@ public class HospitalController {
         }
 
     }
-    private boolean isValidDepartment(String department) {
-        return VALID_DEPARTMENTS.contains(department);
-        // 진료과목이 유효한 경우 true 반환, 그렇지 않으면 false 반환
-    }
-
     // 병원 detaill 작성
     @Operation(summary = "병원 상세정보(이미지o)", description="병원 상세정보 입력(이미지o)")
     @PostMapping("/hospitaldetail")

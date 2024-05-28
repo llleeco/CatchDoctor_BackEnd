@@ -33,7 +33,7 @@ public class OpenApiController {
 
         try {
             // <주의> 전체 데이터인 77447개 데이터를 받아오므로 엄청 오래걸림. url 뒤쪽 numOfRows으로 가져올 데이터 수 조정 가능.
-            String urlStr = "http://apis.data.go.kr/B551182/hospInfoServicev2/getHospBasisList?ServiceKey=%2B11swrr4a7rdAi7MbD6nyiiDgg4ySAlG6YHekwCyrVZUMFN7OcWIzD9c33gQJy%2Birg0bthGv5PkRjuEwDwJHCw%3D%3D&numOfRows=500&_type=json";
+            String urlStr = "http://apis.data.go.kr/B551182/hospInfoServicev2/getHospBasisList?ServiceKey=%2B11swrr4a7rdAi7MbD6nyiiDgg4ySAlG6YHekwCyrVZUMFN7OcWIzD9c33gQJy%2Birg0bthGv5PkRjuEwDwJHCw%3D%3D&numOfRows=80000&_type=json";
             URL url = new URL(urlStr);
             BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream(), "UTF-8"));
 
@@ -53,10 +53,15 @@ public class OpenApiController {
                 String yadmNm = (String) tmp.get("yadmNm");
                 String addr = (String) tmp.get("addr");
                 String telno = (String) tmp.get("telno");
+
+                // postNo 값을 파싱하여 String으로 변환
                 String postNo = parseStringValue(tmp.get("postNo"));
+
+                // xPos와 yPos 값을 파싱하여 Double로 변환
                 Double xPos = parseDoubleValue(tmp.get("XPos"));
                 Double yPos = parseDoubleValue(tmp.get("YPos"));
 
+                // OpenApiHospital 객체를 생성하여 저장
                 OpenApiHospital openApiHospital = new OpenApiHospital(
                         i + (long)1,
                         yadmNm,
@@ -101,11 +106,10 @@ public class OpenApiController {
             return null;
         }
     }
+
     @GetMapping("/api/hospitals")
     @ResponseStatus(HttpStatus.OK)
     public Response<?> findAllHospital() {
         return new Response<>("true", "조회 성공", openApiService.findAll());
     }
-
-
 }
