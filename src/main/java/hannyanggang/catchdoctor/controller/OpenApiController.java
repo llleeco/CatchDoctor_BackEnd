@@ -52,7 +52,11 @@ public class OpenApiController {
                 JSONObject tmp = (JSONObject) array.get(i);
                 String yadmNm = (String) tmp.get("yadmNm");
                 String addr = (String) tmp.get("addr");
-                String telno = (String) tmp.get("telno");
+                Object telnoObj = tmp.get("telno");
+                String telno = null;
+                if (telnoObj != null) {
+                    telno = telnoObj.toString();
+                }
 
                 // postNo 값을 파싱하여 String으로 변환
                 String postNo = parseStringValue(tmp.get("postNo"));
