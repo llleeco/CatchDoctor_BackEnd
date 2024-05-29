@@ -64,7 +64,7 @@ public class HospitalController {
         Map<String, Object> errorBody = new HashMap<>();
         try {
             if ((query == null || query.isEmpty()) && (department == null || department.isEmpty())) { //쿼리 입력값 없을 때 모든 결과 조회
-                responseDTOs = openApiService.getAllHospitals(page, limit);
+                responseDTOs = openApiService.getAllHospitals(mapx, mapy, page, limit);
             } else {
                 if (department != null && !department.isEmpty() && (query == null || query.isEmpty())) { //진료과목으로 검색
                     // department 파라미터에 대한 유효성 검사 (여기에서 유효성 검사 추가)
