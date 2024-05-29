@@ -168,6 +168,42 @@ public class HospitalDetailService {
 
         return hospitalDetailRepository.save(hospitalDetail);
         }
+    public HospitalDetail modifyHospitalMyPage2 (Long detail_id, MultipartFile[] files) throws IOException {
+        Optional<HospitalDetail> optionalHospitalDetail = hospitalDetailRepository.findById(detail_id);
+        HospitalDetail hospitalDetail = optionalHospitalDetail.get();
+        if (files[0] != null) {
+            hospitalDetail.setBoardImage1(null);
+            hospitalDetail.setBoardImage2(null);
+            hospitalDetail.setBoardImage3(null);
+            hospitalDetail.setBoardImage4(null);
+            hospitalDetail.setBoardImage5(null);
+            for (int i = 0; i < files.length && i < 5; i++) {
+                byte[] compressedImage = null;
+                if (files[i] != null) {
+                    compressedImage = ImageUtils.compressImage(files[i].getBytes());
+                }
+                switch (i) {
+                    case 0:
+                        hospitalDetail.setBoardImage1(compressedImage);
+                        break;
+                    case 1:
+                        hospitalDetail.setBoardImage2(compressedImage);
+                        break;
+                    case 2:
+                        hospitalDetail.setBoardImage3(compressedImage);
+                        break;
+                    case 3:
+                        hospitalDetail.setBoardImage4(compressedImage);
+                        break;
+                    case 4:
+                        hospitalDetail.setBoardImage5(compressedImage);
+                        break;
+                }
+            }
+        }
+
+        return hospitalDetailRepository.save(hospitalDetail);
+    }
     // 이미지 파일로 압축하기
     public List<byte[]> downloadImagesBoard(Long detailId) {
         Optional<HospitalDetail> optionalHospitalDetail = hospitalDetailRepository.findById(detailId);

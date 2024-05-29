@@ -2,6 +2,7 @@ package hannyanggang.catchdoctor.service.hospitalService;
 
 import hannyanggang.catchdoctor.dto.LoginRequestDto;
 import hannyanggang.catchdoctor.dto.hospitalDto.HospitalRegisterDto;
+import hannyanggang.catchdoctor.dto.hospitalDto.SearchResponseDto;
 import hannyanggang.catchdoctor.entity.Hospital;
 import hannyanggang.catchdoctor.entity.HospitalDetail;
 import hannyanggang.catchdoctor.entity.OpenApiHospital;
@@ -9,6 +10,7 @@ import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalDetailRepo
 import hannyanggang.catchdoctor.repository.hospitalRepository.HospitalRepository;
 import hannyanggang.catchdoctor.repository.hospitalRepository.OpenApiRepository;
 import hannyanggang.catchdoctor.role.UserRole;
+import hannyanggang.catchdoctor.util.ImageUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,10 +38,25 @@ public class HospitalService {
         return hospitalRepository.findAll();
     }
 
-    public Hospital findHospital(Long hospitalid) {
-        return hospitalRepository.findById(hospitalid).orElseThrow(()-> {
+    public SearchResponseDto findHospital(Long hospitalid) {
+        Hospital hospital = hospitalRepository.findById(hospitalid).orElseThrow(()-> {
             return new IllegalArgumentException("User ID를 찾을 수 없습니다.");
         });
+        byte[] mainImage = null;
+        if (hospital.getHospitalDetail() != null) {
+            byte[] compressedImage = hospital.getHospitalDetail().getBoardImage1();
+            if (compressedImage != null) {
+                mainImage = ImageUtils.decompressImage(compressedImage);
+            }
+        }
+        return new SearchResponseDto(
+                hospital.getOpenApiHospital().getId(),
+                hospital.getOpenApiHospital().getHospitalname(),
+                hospital.getOpenApiHospital().getAddress(),
+                hospital.getOpenApiHospital().getTel(),
+                hospital,
+                mainImage
+        );
     }
 
     public Hospital login(LoginRequestDto loginDto){

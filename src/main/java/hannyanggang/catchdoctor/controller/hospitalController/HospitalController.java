@@ -133,6 +133,21 @@ public class HospitalController {
         }
         return new Response("수정", "병원 정보 수정", hospitalDetailService.modifyHospitalMyPage(hospitalDetailDto, detail_id, files));
     }
+    @Operation(summary = "병원 이미지 수정", description="병원 이미지 수정")
+    @PostMapping("/hospitaldetail/modify2/{detail_id}")
+    public Response hospitalDetailModfiy(Authentication authentication, @RequestPart("image") MultipartFile[] files, @PathVariable Long detail_id) throws IOException {
+        String Id = authentication.getName();
+        Hospital hospital = hospitalRepository.findById(Id);
+        HospitalDetail hospitalDetail = hospitalDetailRepository.findByHospital(hospital);
+        // 병원 상세 정보의 ID가 URL의 ID와 일치하는지 확인
+        if (!hospitalDetail.getId().equals(detail_id)) {
+            throw new BadRequestException("로그인 정보가 일치하지 않습니다.");
+        }
+        if(files[0].isEmpty()){
+            files[0] = null;
+        }
+        return new Response("수정", "병원 정보 수정", hospitalDetailService.modifyHospitalMyPage2(detail_id, files));
+    }
 
     // 병원 detail 찾기
     @Operation(summary = "병원 상세정보 찾기", description="본인의 병원 상세정보 요청")

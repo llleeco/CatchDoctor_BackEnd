@@ -28,7 +28,7 @@ public class BoardService {
     // 전체 게시물 조회
     @Transactional(readOnly = true)
     public List<BoardDto> getBoards() {
-        List<Board> boards = boardRepository.findAll();
+        List<Board> boards = boardRepository.findAllByOrderByRegDateDescRegTimeDesc();
         List<BoardDto> boardDtos = new ArrayList<>();
         boards.forEach(s -> boardDtos.add(BoardDto.toDto(s)));
         return boardDtos;
