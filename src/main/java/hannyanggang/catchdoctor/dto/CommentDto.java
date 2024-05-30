@@ -17,7 +17,7 @@ public class CommentDto {
     private String content;
     private String writer;
     private LocalDate regDate;
-    @JsonFormat(pattern = "HH:mm")
+    @JsonFormat(pattern = "HH:mm:ss")
     private LocalTime regTime;
 
     public static CommentDto toDto(Comment comment) {

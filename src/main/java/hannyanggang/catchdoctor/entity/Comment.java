@@ -33,7 +33,7 @@ public class Comment {
     @Column(updatable = false)
     private LocalDate regDate;
 
-    @JsonFormat(pattern = "HH:mm")
+    @JsonFormat(pattern = "HH:mm:ss")
     @Column(updatable = false)
     private LocalTime regTime;
 

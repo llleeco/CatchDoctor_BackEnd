@@ -2,6 +2,8 @@ package hannyanggang.catchdoctor.service.hospitalService;
 
 import hannyanggang.catchdoctor.dto.hospitalDto.OpenApiHospitalDto;
 import hannyanggang.catchdoctor.dto.hospitalDto.SearchResponseDto;
+import hannyanggang.catchdoctor.entity.Hospital;
+import hannyanggang.catchdoctor.entity.HospitalDetail;
 import hannyanggang.catchdoctor.entity.OpenApiHospital;
 import hannyanggang.catchdoctor.repository.hospitalRepository.OpenApiRepository;
 import hannyanggang.catchdoctor.util.ImageUtils;
@@ -43,7 +45,6 @@ public class OpenApiService {
                         hospitalLatitude = 0.0;
                         hospitalLongitude = 0.0;
                     }
-
             double distance = calculateDistance(MyMapX, MyMapY, hospitalLatitude, hospitalLongitude);
                     byte[] mainImage = null;
                     if (openApiHospital.getHospital() != null && openApiHospital.getHospital().getHospitalDetail() != null) {
@@ -52,8 +53,6 @@ public class OpenApiService {
                             mainImage = ImageUtils.decompressImage(compressedImage);
                         }
                     }
-
-
             // SearchResponseDto 객체 생성
             return new SearchResponseDto(
                     openApiHospital.getId(),
@@ -88,7 +87,6 @@ public class OpenApiService {
                             mainImage = ImageUtils.decompressImage(compressedImage);
                         }
                     }
-
                     // SearchResponseDto 객체 생성
                     return new SearchResponseDto(
                             openApiHospital.getId(),
@@ -127,28 +125,45 @@ public class OpenApiService {
     public List<SearchResponseDto> getAllHospitals(double MyMapX, double MyMapY, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<OpenApiHospital> openApiHospitals = openApiRepository.findAll(pageRequest);
-        // 병원 목록을 HospitalDTO 목록으로 변환
+
         return openApiHospitals.stream().map(openApiHospital -> {
-                    final double distance;
-                    if (openApiHospital.getMapY() != null && openApiHospital.getMapX() != null) {
-                        double hospitalLatitude = openApiHospital.getMapY();
-                        double hospitalLongitude = openApiHospital.getMapX();
+                    byte[] mainImage = null;
+                    double distance;
+                    Double hospitalLatitude = openApiHospital.getMapY();
+                    Double hospitalLongitude = openApiHospital.getMapX();
+
+                    if (hospitalLatitude != null && hospitalLongitude != null) {
                         distance = calculateDistance(MyMapY, MyMapX, hospitalLatitude, hospitalLongitude);
                     } else {
                         distance = Double.MAX_VALUE;
                     }
+
+                    if (openApiHospital.getHospital() != null) {
+                        Hospital hospital = openApiHospital.getHospital();
+                        if (hospital.getHospitalDetail() != null) {
+                            HospitalDetail hospitalDetail = hospital.getHospitalDetail();
+                            if (hospitalDetail.getBoardImage1() != null) {
+                                byte[] compressedImage = hospitalDetail.getBoardImage1();
+                                if (compressedImage != null) {
+                                    mainImage = ImageUtils.decompressImage(compressedImage);
+                                }
+                            }
+                        }
+                    }
+
                     return new SearchResponseDto(
                             openApiHospital.getId(),
                             openApiHospital.getHospitalname(),
                             openApiHospital.getAddress(),
                             openApiHospital.getTel(),
                             openApiHospital.getHospital(),
-                            ImageUtils.decompressImage(openApiHospital.getHospital().getHospitalDetail().getBoardImage1()),
+                            mainImage,
                             distance
                     );
                 }).sorted(Comparator.comparingDouble(SearchResponseDto::getDistance))
                 .collect(Collectors.toList());
     }
+
     public boolean checkHospital(String hospitalName){
         OpenApiHospital openApiHospital = openApiRepository.findByHospitalName(hospitalName);
         if (openApiHospital == null) {
