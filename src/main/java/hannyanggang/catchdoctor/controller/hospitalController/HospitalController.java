@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @RestController
@@ -134,10 +135,12 @@ public class HospitalController {
         return new Response("수정", "병원 정보 수정", hospitalDetailService.modifyHospitalMyPage(hospitalDetailDto, detail_id, files));
     }
     @Operation(summary = "병원 이미지 수정", description="병원 이미지 수정")
-    @PostMapping("/hospitaldetail/modify2/{detail_id}")
-    public Response hospitalDetailModfiy(Authentication authentication, @RequestPart("image") MultipartFile[] files, @PathVariable Long detail_id) throws IOException {
-        String Id = authentication.getName();
-        Hospital hospital = hospitalRepository.findById(Id);
+    @PostMapping("/hospitaldetail/modify2/{hospital_id}/{detail_id}")
+    public Response hospitalDetailModfiy(@RequestPart("image") MultipartFile[] files, @PathVariable Long detail_id,
+                                         @PathVariable Long hospital_id) throws IOException {
+        Long hospitalId = hospital_id;
+        Optional<Hospital> optionalHospital = hospitalRepository.findById(hospitalId);
+        Hospital hospital = optionalHospital.get();
         HospitalDetail hospitalDetail = hospitalDetailRepository.findByHospital(hospital);
         // 병원 상세 정보의 ID가 URL의 ID와 일치하는지 확인
         if (!hospitalDetail.getId().equals(detail_id)) {
