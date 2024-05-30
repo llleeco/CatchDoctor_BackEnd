@@ -1,6 +1,7 @@
 package hannyanggang.catchdoctor.service.hospitalService;
 
 import hannyanggang.catchdoctor.dto.LoginRequestDto;
+import hannyanggang.catchdoctor.dto.SearchHospitalDto;
 import hannyanggang.catchdoctor.dto.hospitalDto.HospitalRegisterDto;
 import hannyanggang.catchdoctor.dto.hospitalDto.SearchResponseDto;
 import hannyanggang.catchdoctor.entity.Hospital;
@@ -38,7 +39,7 @@ public class HospitalService {
         return hospitalRepository.findAll();
     }
 
-    public SearchResponseDto findHospital(Long hospitalid) {
+    public SearchHospitalDto findHospital(Long hospitalid) {
         Hospital hospital = hospitalRepository.findById(hospitalid).orElseThrow(()-> {
             return new IllegalArgumentException("User ID를 찾을 수 없습니다.");
         });
@@ -49,11 +50,7 @@ public class HospitalService {
                 mainImage = ImageUtils.decompressImage(compressedImage);
             }
         }
-        return new SearchResponseDto(
-                hospital.getOpenApiHospital().getId(),
-                hospital.getOpenApiHospital().getHospitalname(),
-                hospital.getOpenApiHospital().getAddress(),
-                hospital.getOpenApiHospital().getTel(),
+        return new SearchHospitalDto(
                 hospital,
                 mainImage
         );
