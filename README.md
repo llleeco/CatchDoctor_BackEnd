@@ -2,6 +2,7 @@
 # 병원 예약 서비스앱 CatchDoctor
 ![image](https://github.com/pinkyponky514/capstone2024/assets/71865475/26127a3f-da51-455b-a8af-a1dc71d912d8)
 
+---> FRONT-END 바로가기 : https://github.com/pinkyponky514/capstone2024
 ## 1. 프로젝트 소개
 * CatchDoctor은 openAI를 fine-tuning한 챗봇을 활용하여 병원 예약을 도와주는 위치 기반 병원 예약 애플리케이션 입니다.
 * 환자는 원하는 병원을 검색하고 진료시간에 맞게 예약할 수 있고, 커뮤니티, 리뷰 작성, 즐겨찾기 등을 할 수 있습니다.
